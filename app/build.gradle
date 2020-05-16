@@ -23,9 +23,28 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file('../release.keystore')
+            keyAlias "app"
+
+            // read key password from external file
+            file("../signing.properties").with { propFile ->
+                if (propFile.canRead()) {
+                    def properties = new Properties()
+                    properties.load(new FileInputStream(propFile))
+                    storePassword properties['keyPassword']
+                    keyPassword properties['keyPassword']
+                } else {
+                    throw new IllegalArgumentException('Unable to read signing.properties')
+                }
+            }
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

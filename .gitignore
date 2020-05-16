@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 .idea
+signing.properties
+release.keystore
