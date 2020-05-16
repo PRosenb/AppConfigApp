@@ -1,8 +1,40 @@
+import org.ajoberstar.grgit.Grgit
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.gitlab.arturbosch.detekt'
+
+ext {
+    def repo = Grgit.open()
+    def head = repo.head()
+    def tags = repo.tag.list().findAll { it.commit == head }
+    if (tags.size() > 1) {
+        def errorStr = "More than one tag: "
+        tags.each { item ->
+            errorStr += item.name + ", "
+        }
+        errorStr = errorStr.substring(0, errorStr.length() - 2)
+        throw new IllegalArgumentException(errorStr)
+    } else if (tags.size() == 1) {
+        def currentTag = tags[0].name
+        assert currentTag ==~ '^v[0-9]+[.][0-9]+.[0-9]+$'
+
+        calculatedVersionName = currentTag.substring(1) // remove leading "v"
+    } else {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm")
+        calculatedVersionName = formatter.format(new Date())
+    }
+    // use last versionCode
+    calculatedVersionCode = repo.tag
+            .list()
+            .findAll { it.name ==~ '^v[0-9]+[.][0-9]+.[0-9]+$' }
+            .size()
+
+    println("versionCode: " + calculatedVersionCode + ", versionName: " + calculatedVersionName)
+}
 
 android {
     compileSdkVersion 29
@@ -12,9 +44,10 @@ android {
         applicationId "ch.pete.appconfigapp"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode calculatedVersionCode
+        versionName calculatedVersionName
 
+        setProperty("archivesBaseName", "AppConfigApp_" + versionName + "-" + versionCode)
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
