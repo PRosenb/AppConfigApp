@@ -38,7 +38,7 @@ data class KeyValue(
     val id: Long? = null,
     val configId: Long,
     val key: String,
-    val value: String
+    val value: String?
 )
 
 @Entity(tableName = "execution_result")

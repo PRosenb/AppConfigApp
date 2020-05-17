@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -12,6 +13,7 @@ import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
 import ch.pete.appconfigapp.model.KeyValue
 import kotlinx.android.synthetic.main.dialogfragment_keyvalues.view.key
+import kotlinx.android.synthetic.main.dialogfragment_keyvalues.view.nullCheckbox
 import kotlinx.android.synthetic.main.dialogfragment_keyvalues.view.ok
 import kotlinx.android.synthetic.main.dialogfragment_keyvalues.view.value
 
@@ -51,9 +53,23 @@ class KeyValueDialogFragment : DialogFragment() {
                             keyValueLiveData.removeObserver(this)
                             rootView.key.setText(keyValue.key)
                             rootView.value.setText(keyValue.value)
+                            rootView.nullCheckbox.isChecked = keyValue.value == null
                         }
                     })
 
+                }
+
+                rootView.value.addTextChangedListener(
+                    afterTextChanged = { editable ->
+                        if (editable?.isNotBlank() == true) {
+                            rootView.nullCheckbox.isChecked = false
+                        }
+                    }
+                )
+                rootView.nullCheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        rootView.value.setText("")
+                    }
                 }
 
                 rootView.ok.setOnClickListener {
@@ -65,7 +81,11 @@ class KeyValueDialogFragment : DialogFragment() {
                         },
                         configId = configId,
                         key = rootView.key.text.toString(),
-                        value = rootView.value.text.toString()
+                        value = if (rootView.nullCheckbox.isChecked) {
+                            null
+                        } else {
+                            rootView.value.text.toString()
+                        }
                     )
                     viewModel.storeKeyValue(keyValue)
                     dialog?.dismiss()
