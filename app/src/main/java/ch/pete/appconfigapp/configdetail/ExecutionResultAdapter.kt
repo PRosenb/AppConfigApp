@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import ch.pete.appconfigapp.R
 import ch.pete.appconfigapp.model.ExecutionResult
 import ch.pete.appconfigapp.model.ResultType
+import kotlinx.android.synthetic.main.execution_result_list_item.view.executionResult
+import kotlinx.android.synthetic.main.execution_result_list_item.view.timestamp
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ExecutionResultAdapter(
     private val onItemClickListener: ((ExecutionResult) -> Unit)?
@@ -20,7 +24,8 @@ class ExecutionResultAdapter(
     ) {
 
     class ConfigEntryViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
-        val executionResult: TextView = rootView.findViewById(R.id.executionResult)
+        val timestamp: TextView = rootView.timestamp
+        val executionResult: TextView = rootView.executionResult
     }
 
     override fun onCreateViewHolder(
@@ -35,6 +40,11 @@ class ExecutionResultAdapter(
 
     override fun onBindViewHolder(holder: ConfigEntryViewHolder, position: Int) {
         val executionResult = getItem(position)
+
+        val formatter = SimpleDateFormat(DATE_TIME_PATTERN, Locale.getDefault())
+        val formattedDateTime: String = formatter.format(executionResult.timestamp.time)
+        holder.timestamp.text = formattedDateTime
+
         val context = holder.executionResult.context
         holder.executionResult.text =
             when (executionResult.resultType) {
@@ -82,6 +92,8 @@ class ExecutionResultAdapter(
     }
 
     companion object {
+        const val DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm"
+
         val DIFF_CALLBACK =
             object : DiffUtil.ItemCallback<ExecutionResult>() {
                 override fun areItemsTheSame(oldItem: ExecutionResult, newItem: ExecutionResult) =
