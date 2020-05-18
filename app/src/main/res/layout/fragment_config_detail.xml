@@ -6,14 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/titleName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/name_"
+        app:layout_constraintBaseline_toBaselineOf="@+id/name"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/titleAuthority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/authority_"
+        app:layout_constraintBaseline_toBaselineOf="@+id/authority"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/nameAuthorityBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="titleName,titleAuthority" />
+
     <EditText
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autofillHints="title"
-        android:hint="@string/name"
-        android:inputType="text"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:hint="@string/name_hint"
+        android:inputType="textNoSuggestions"
+        app:layout_constraintStart_toEndOf="@id/nameAuthorityBarrier"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -21,9 +46,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autofillHints="authority"
-        android:hint="@string/authority"
-        android:inputType="textUri"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:hint="@string/authority_hint"
+        android:inputType="textNoSuggestions"
+        app:layout_constraintStart_toEndOf="@id/nameAuthorityBarrier"
         app:layout_constraintTop_toBottomOf="@id/name" />
 
     <TextView

@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">App Configuration for QA</string>
     <string name="execute">Execute</string>
-    <string name="name">Name</string>
-    <string name="authority">Authority</string>
+    <string name="name_">Name:</string>
+    <string name="name_hint">Type the name of this configuration</string>
+    <string name="authority_">Authority:</string>
+    <string name="authority_hint">Authority like com.yourapp.config</string>
     <string name="content_description_execute">Execute</string>
     <string name="result_title">Result:</string>
     <string name="delete">DELETE</string>
