@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App Configuration for QA</string>
+    <string name="app_name">App Config</string>
     <string name="execute">Execute</string>
     <string name="name_">Name:</string>
     <string name="name_hint">Type the name of this configuration</string>
