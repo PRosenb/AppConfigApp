@@ -6,7 +6,7 @@ import java.util.*
 
 class CalendarConverter {
     companion object {
-        const val ISO_8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+        const val ISO_8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
     }
 
     @TypeConverter
