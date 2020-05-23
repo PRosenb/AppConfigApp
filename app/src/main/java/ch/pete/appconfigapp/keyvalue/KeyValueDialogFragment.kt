@@ -1,11 +1,9 @@
 package ch.pete.appconfigapp.keyvalue
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -61,7 +59,7 @@ class KeyValueDialogFragment : DialogFragment() {
                 }
 
                 rootView.ok.setOnClickListener {
-                    onOkClicked(args.getLong(ARG_KEY_VALUE_ID), rootView)
+                    onOkClicked(args.getLong(ARG_CONFIG_ID), rootView)
                 }
 
                 rootView
@@ -75,15 +73,6 @@ class KeyValueDialogFragment : DialogFragment() {
             parentFragmentManager.popBackStack()
         }
         return rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        dialog?.setOnDismissListener {
-            val imm =
-                context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager?
-            imm?.hideSoftInputFromWindow(view.windowToken, 0)
-        }
     }
 
     private fun loadData(args: Bundle, rootView: View) {
