@@ -39,65 +39,41 @@ class KeyValueDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.dialogfragment_keyvalues, container, false)
-        arguments?.let {
-            val configId = if (it.containsKey(ARG_CONFIG_ID)) {
-                it.getLong(ARG_CONFIG_ID)
-            } else {
-                null
-            }
-            if (configId != null) {
-                if (it.containsKey(ARG_KEY_VALUE_ID)) {
-                    val keyValueLiveData =
-                        viewModel.keyValueEntryByKeyValueId(it.getLong(ARG_KEY_VALUE_ID))
-                    keyValueLiveData.observe(viewLifecycleOwner, object : Observer<KeyValue> {
-                        override fun onChanged(keyValue: KeyValue) {
-                            keyValueLiveData.removeObserver(this)
-                            rootView.key.setText(keyValue.key)
-                            rootView.value.setText(keyValue.value)
-                            rootView.nullCheckbox.isChecked = keyValue.value == null
-                        }
-                    })
-
-                }
-
-                rootView.value.addTextChangedListener(
-                    afterTextChanged = { editable ->
-                        if (editable?.isNotBlank() == true) {
-                            rootView.nullCheckbox.isChecked = false
-                        }
-                    }
-                )
-                rootView.nullCheckbox.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        rootView.value.setText("")
-                    }
-                }
-
-                rootView.ok.setOnClickListener {
-                    val keyValue = KeyValue(
-                        id = if (arguments?.containsKey(ARG_KEY_VALUE_ID) == true) {
-                            arguments?.getLong(ARG_KEY_VALUE_ID)
-                        } else {
-                            null
-                        },
-                        configId = configId,
-                        key = rootView.key.text.toString(),
-                        value = if (rootView.nullCheckbox.isChecked) {
-                            null
-                        } else {
-                            rootView.value.text.toString()
-                        }
-                    )
-                    viewModel.storeKeyValue(keyValue)
-                    dialog?.dismiss()
-                }
-            } else {
+        arguments?.let { args ->
+            val configId = if (!args.containsKey(ARG_CONFIG_ID)) {
                 parentFragmentManager.popBackStack()
+                return null
+            } else {
+                args.getLong(ARG_CONFIG_ID)
             }
-        } ?: parentFragmentManager.popBackStack()
 
-        return rootView
+            val rootView = inflater.inflate(R.layout.dialogfragment_keyvalues, container, false)
+
+            if (args.containsKey(ARG_KEY_VALUE_ID)) {
+                loadData(args, rootView)
+            }
+
+            rootView.value.addTextChangedListener(
+                afterTextChanged = { editable ->
+                    if (editable?.isNotBlank() == true) {
+                        rootView.nullCheckbox.isChecked = false
+                    }
+                }
+            )
+            rootView.nullCheckbox.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    rootView.value.setText("")
+                }
+            }
+
+            rootView.ok.setOnClickListener {
+                onOkClicked(configId, rootView)
+            }
+            return rootView
+        } ?: run {
+            parentFragmentManager.popBackStack()
+            return null
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -107,5 +83,37 @@ class KeyValueDialogFragment : DialogFragment() {
                 context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager?
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
         }
+    }
+
+    private fun loadData(args: Bundle, rootView: View) {
+        val keyValueLiveData =
+            viewModel.keyValueEntryByKeyValueId(args.getLong(ARG_KEY_VALUE_ID))
+        keyValueLiveData.observe(viewLifecycleOwner, object : Observer<KeyValue> {
+            override fun onChanged(keyValue: KeyValue) {
+                keyValueLiveData.removeObserver(this)
+                rootView.key.setText(keyValue.key)
+                rootView.value.setText(keyValue.value)
+                rootView.nullCheckbox.isChecked = keyValue.value == null
+            }
+        })
+    }
+
+    private fun onOkClicked(configId: Long, rootView: View) {
+        val keyValue = KeyValue(
+            id = if (arguments?.containsKey(ARG_KEY_VALUE_ID) == true) {
+                arguments?.getLong(ARG_KEY_VALUE_ID)
+            } else {
+                null
+            },
+            configId = configId,
+            key = rootView.key.text.toString(),
+            value = if (rootView.nullCheckbox.isChecked) {
+                null
+            } else {
+                rootView.value.text.toString()
+            }
+        )
+        viewModel.storeKeyValue(keyValue)
+        dialog?.dismiss()
     }
 }
