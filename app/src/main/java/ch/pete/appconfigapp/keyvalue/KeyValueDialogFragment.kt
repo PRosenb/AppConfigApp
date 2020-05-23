@@ -26,7 +26,7 @@ class KeyValueDialogFragment : DialogFragment() {
         const val ARG_KEY_VALUE_ID = "keyValue_id"
     }
 
-    private val viewModel: KeyValueViewModel by viewModels()
+    private val viewModel: KeyValueDialogViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

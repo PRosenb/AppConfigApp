@@ -7,7 +7,7 @@ import ch.pete.appconfigapp.db.AppConfigDao
 import ch.pete.appconfigapp.model.KeyValue
 import kotlinx.coroutines.launch
 
-class KeyValueViewModel : ViewModel() {
+class KeyValueDialogViewModel : ViewModel() {
     lateinit var mainActivityViewModel: MainActivityViewModel
 
     private val appConfigDao: AppConfigDao by lazy {
