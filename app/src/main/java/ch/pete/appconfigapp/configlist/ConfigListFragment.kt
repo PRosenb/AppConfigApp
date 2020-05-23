@@ -69,12 +69,23 @@ class ConfigListFragment : Fragment(), ConfigListView {
         return rootView
     }
 
+    override fun showDetailsOfNewItem(configId: Long) {
+        showDetails(configId, true)
+    }
+
     override fun showDetails(configId: Long) {
+        showDetails(configId, false)
+    }
+
+    private fun showDetails(configId: Long, isNew: Boolean) {
         val fragmentTransaction = parentFragmentManager.beginTransaction()
         val fragment = ConfigDetailFragment()
 
         fragment.arguments = Bundle().apply {
             putLong(ConfigDetailFragment.ARG_CONFIG_ENTRY_ID, configId)
+            if (isNew) {
+                putBoolean(ConfigDetailFragment.ARG_NEW, true)
+            }
         }
         fragmentTransaction
             .replace(

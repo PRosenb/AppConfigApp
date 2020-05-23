@@ -31,6 +31,9 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
     fun executionResultEntriesByConfigId(configId: Long) =
         appConfigDao.fetchExecutionResultEntriesByConfigId(configId)
 
+    fun onNewItem(configId: Long) =
+        view.showNameAuthorityFragment(configId)
+
     fun onEditNameAuthorityClicked(configId: Long) {
         view.showNameAuthorityFragment(configId)
     }

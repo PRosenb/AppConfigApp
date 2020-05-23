@@ -17,7 +17,11 @@ import ch.pete.appconfigapp.keyvalue.KeyValuesFragment
 import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.KeyValue
 import ch.pete.appconfigapp.nameauthority.NameAuthorityFragment
-import kotlinx.android.synthetic.main.fragment_config_detail.*
+import kotlinx.android.synthetic.main.fragment_config_detail.authority
+import kotlinx.android.synthetic.main.fragment_config_detail.editKeyValue
+import kotlinx.android.synthetic.main.fragment_config_detail.editNameAuthority
+import kotlinx.android.synthetic.main.fragment_config_detail.keyValue
+import kotlinx.android.synthetic.main.fragment_config_detail.name
 import kotlinx.android.synthetic.main.fragment_config_detail.view.execute
 import kotlinx.android.synthetic.main.fragment_config_detail.view.executionResults
 import timber.log.Timber
@@ -25,6 +29,7 @@ import timber.log.Timber
 class ConfigDetailFragment : Fragment(), ConfigDetailView {
     companion object {
         const val ARG_CONFIG_ENTRY_ID = "ARG_CONFIG_ENTRY_ID"
+        const val ARG_NEW = "ARG_NEW"
     }
 
     private val viewModel: ConfigDetailViewModel by viewModels()
@@ -47,6 +52,11 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView {
             if (it.containsKey(ARG_CONFIG_ENTRY_ID)) {
                 val configId = it.getLong(ARG_CONFIG_ENTRY_ID)
                 initView(rootView, configId)
+                if (it.getBoolean(ARG_NEW)) {
+                    viewModel.onNewItem(configId)
+                    // only show it the first time
+                    it.remove(ARG_NEW)
+                }
             } else {
                 parentFragmentManager.popBackStack()
             }

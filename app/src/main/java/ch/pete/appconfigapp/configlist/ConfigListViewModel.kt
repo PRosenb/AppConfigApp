@@ -29,7 +29,7 @@ class ConfigListViewModel(application: Application) : AndroidViewModel(applicati
             val configId = withContext(Dispatchers.IO) {
                 appConfigDao.insertEmptyConfig()
             }
-            view.showDetails(configId)
+            view.showDetailsOfNewItem(configId)
         }
     }
 
