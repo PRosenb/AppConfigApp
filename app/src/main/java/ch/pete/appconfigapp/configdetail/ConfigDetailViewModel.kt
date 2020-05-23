@@ -23,18 +23,6 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
         mainActivityViewModel.appConfigDatabase.appConfigDao()
     }
 
-    fun onNameUpdated(name: String, configId: Long) {
-        viewModelScope.launch {
-            appConfigDao.updateConfigName(name, configId)
-        }
-    }
-
-    fun onAuthorityUpdated(authority: String, configId: Long) {
-        viewModelScope.launch {
-            appConfigDao.updateConfigAuthority(authority, configId)
-        }
-    }
-
     fun configById(configId: Long): LiveData<Config> =
         appConfigDao.fetchConfigById(configId)
 

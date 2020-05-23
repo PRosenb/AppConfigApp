@@ -1,12 +1,7 @@
 package ch.pete.appconfigapp.db
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.*
 import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.ConfigEntry
 import ch.pete.appconfigapp.model.ExecutionResult
@@ -86,11 +81,8 @@ interface AppConfigDao {
     @Insert
     suspend fun insertExecutionResults(executionResults: List<ExecutionResult>)
 
-    @Query("UPDATE config SET name = :name WHERE id = :configId")
-    suspend fun updateConfigName(name: String, configId: Long)
-
-    @Query("UPDATE config SET authority = :authority WHERE id = :configId")
-    suspend fun updateConfigAuthority(authority: String, configId: Long)
+    @Query("UPDATE config SET name = :name, authority = :authority WHERE id = :configId")
+    suspend fun updateConfigNameAndAuthority(name: String, authority: String, configId: Long)
 
     @Update
     suspend fun updateKeyValue(keyValue: KeyValue): Int

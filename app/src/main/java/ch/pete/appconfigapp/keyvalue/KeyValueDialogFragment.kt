@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import ch.pete.appconfigapp.MainActivityViewModel
@@ -26,7 +26,7 @@ class KeyValueDialogFragment : DialogFragment() {
         const val ARG_KEY_VALUE_ID = "keyValue_id"
     }
 
-    private val viewModel: KeyValueViewModel by activityViewModels()
+    private val viewModel: KeyValueViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
