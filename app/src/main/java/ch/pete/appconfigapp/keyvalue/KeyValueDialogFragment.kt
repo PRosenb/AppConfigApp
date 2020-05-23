@@ -39,41 +39,42 @@ class KeyValueDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        arguments?.let { args ->
-            val configId = if (!args.containsKey(ARG_CONFIG_ID)) {
-                parentFragmentManager.popBackStack()
-                return null
-            } else {
-                args.getLong(ARG_CONFIG_ID)
-            }
+        val rootView = arguments?.let { args ->
+            val rootView = if (args.containsKey(ARG_CONFIG_ID)) {
+                val rootView = inflater.inflate(R.layout.dialogfragment_keyvalues, container, false)
 
-            val rootView = inflater.inflate(R.layout.dialogfragment_keyvalues, container, false)
+                if (args.containsKey(ARG_KEY_VALUE_ID)) {
+                    loadData(args, rootView)
+                }
 
-            if (args.containsKey(ARG_KEY_VALUE_ID)) {
-                loadData(args, rootView)
-            }
-
-            rootView.value.addTextChangedListener(
-                afterTextChanged = { editable ->
-                    if (editable?.isNotBlank() == true) {
-                        rootView.nullCheckbox.isChecked = false
+                rootView.value.addTextChangedListener(
+                    afterTextChanged = { editable ->
+                        if (editable?.isNotBlank() == true) {
+                            rootView.nullCheckbox.isChecked = false
+                        }
+                    }
+                )
+                rootView.nullCheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        rootView.value.setText("")
                     }
                 }
-            )
-            rootView.nullCheckbox.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    rootView.value.setText("")
-                }
-            }
 
-            rootView.ok.setOnClickListener {
-                onOkClicked(configId, rootView)
+                rootView.ok.setOnClickListener {
+                    onOkClicked(args.getLong(ARG_KEY_VALUE_ID), rootView)
+                }
+
+                rootView
+            } else {
+                null
             }
-            return rootView
-        } ?: run {
-            parentFragmentManager.popBackStack()
-            return null
+            rootView
         }
+
+        if (rootView == null) {
+            parentFragmentManager.popBackStack()
+        }
+        return rootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

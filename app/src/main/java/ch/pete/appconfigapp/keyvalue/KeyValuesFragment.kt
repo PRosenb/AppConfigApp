@@ -34,25 +34,24 @@ class KeyValuesFragment : Fragment(), KeyValueView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        arguments?.let { args ->
-            val configId = if (!args.containsKey(ARG_CONFIG_ID)) {
-                parentFragmentManager.popBackStack()
-                return null
-            } else {
-                args.getLong(ARG_CONFIG_ID)
-            }
+        val rootView = arguments?.let { args ->
+            val rootView = if (args.containsKey(ARG_CONFIG_ID)) {
+                val rootView = inflater.inflate(R.layout.fragment_keyvalue, container, false)
 
-            val rootView = inflater.inflate(R.layout.fragment_keyvalue, container, false)
-
-            initKeyValuesView(configId, rootView)
-            rootView.addKeyValueButton.setOnClickListener {
-                viewModel.onAddKeyValueClicked(configId)
-            }
-            return rootView
-        } ?: run {
-            parentFragmentManager.popBackStack()
-            return null
+                val configId = args.getLong(ARG_CONFIG_ID)
+                initKeyValuesView(configId, rootView)
+                rootView.addKeyValueButton.setOnClickListener {
+                    viewModel.onAddKeyValueClicked(configId)
+                }
+                rootView
+            } else null
+            rootView
         }
+
+        if (rootView == null) {
+            parentFragmentManager.popBackStack()
+        }
+        return rootView
     }
 
     override fun showKeyValueDetails(configId: Long, keyValueId: Long?) {

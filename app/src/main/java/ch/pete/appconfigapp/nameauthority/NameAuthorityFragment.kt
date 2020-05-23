@@ -35,22 +35,24 @@ class NameAuthorityFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        arguments?.let { args ->
-            val configId = if (!args.containsKey(ARG_CONFIG_ID)) {
-                parentFragmentManager.popBackStack()
-                return null
+        val rootView = arguments?.let { args ->
+            val rootView = if (args.containsKey(ARG_CONFIG_ID)) {
+                val configId = args.getLong(ARG_CONFIG_ID)
+                val rootView = inflater.inflate(R.layout.fragment_name_authority, container, false)
+
+                loadData(configId, rootView)
+                rootView
             } else {
-                args.getLong(ARG_CONFIG_ID)
+                null
             }
 
-            val rootView = inflater.inflate(R.layout.fragment_name_authority, container, false)
-
-            loadData(configId, rootView)
-            return rootView
-        } ?: run {
-            parentFragmentManager.popBackStack()
-            return null
+            rootView
         }
+
+        if (rootView == null) {
+            parentFragmentManager.popBackStack()
+        }
+        return rootView
     }
 
     private fun loadData(configId: Long, rootView: View) {
