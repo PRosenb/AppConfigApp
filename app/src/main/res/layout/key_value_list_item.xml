@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="?android:attr/selectableItemBackground"
-        android:padding="5dp">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/key"
@@ -42,7 +42,7 @@
             android:maxLines="2"
             app:layout_constraintEnd_toStartOf="@+id/value"
             app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintHorizontal_weight="0.3"
+            app:layout_constraintHorizontal_weight="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="key" />
@@ -55,7 +55,7 @@
             android:maxLines="2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintHorizontal_weight="0.7"
+            app:layout_constraintHorizontal_weight="0.5"
             app:layout_constraintStart_toEndOf="@id/key"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="value" />
