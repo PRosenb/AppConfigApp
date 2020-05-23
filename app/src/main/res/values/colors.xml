@@ -5,4 +5,5 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="failure_color">#F44336</color>
+    <color name="details_background">#F1F0F0</color>
 </resources>

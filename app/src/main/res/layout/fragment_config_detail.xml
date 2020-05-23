@@ -4,52 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/details_background"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/titleName"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nameAuthorityArea"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="@string/name_"
-        app:layout_constraintBaseline_toBaselineOf="@+id/name"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:background="@android:color/background_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/titleAuthority"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="@string/authority_"
-        app:layout_constraintBaseline_toBaselineOf="@+id/authority"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Name" />
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/nameAuthorityBarrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="end"
-        app:constraint_referenced_ids="titleName,titleAuthority" />
+        <TextView
+            android:id="@+id/authority"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@id/dividerNameAuthorityBottom"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:text="Authority" />
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints="title"
-        android:hint="@string/name_hint"
-        android:inputType="textNoSuggestions"
-        app:layout_constraintStart_toEndOf="@id/nameAuthorityBarrier"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/editNameAuthority"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="8dp"
+            app:layout_constraintBottom_toTopOf="@id/dividerNameAuthorityBottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
 
-    <EditText
-        android:id="@+id/authority"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints="authority"
-        android:hint="@string/authority_hint"
-        android:inputType="textNoSuggestions"
-        app:layout_constraintStart_toEndOf="@id/nameAuthorityBarrier"
-        app:layout_constraintTop_toBottomOf="@id/name" />
+        <View
+            android:id="@+id/dividerNameAuthorityBottom"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/authority" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/keyValuesTitle"
@@ -62,7 +72,7 @@
         android:text="@string/key_values_title"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/authority" />
+        app:layout_constraintTop_toBottomOf="@+id/nameAuthorityArea" />
 
     <View
         android:id="@+id/dividerTitleAndKeyValues"
@@ -75,6 +85,7 @@
         android:id="@+id/keyValues"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@android:color/background_light"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/execute"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -97,14 +108,15 @@
         android:background="@android:color/black"
         app:layout_constraintTop_toBottomOf="@id/keyValues" />
 
-    <Button
+    <ImageView
         android:id="@+id/execute"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="@string/execute"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/content_description_execute"
         app:layout_constraintBottom_toTopOf="@+id/dividerBetweenExecuteAndExecutionResults"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:srcCompat="@drawable/ic_playback_play" />
 
     <View
         android:id="@+id/dividerBetweenExecuteAndExecutionResults"
@@ -139,6 +151,7 @@
         android:id="@+id/executionResults"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@android:color/background_light"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

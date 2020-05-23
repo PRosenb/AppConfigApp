@@ -17,6 +17,7 @@ import ch.pete.appconfigapp.R
 import ch.pete.appconfigapp.keyvalue.KeyValueDialogFragment
 import ch.pete.appconfigapp.model.Config
 import kotlinx.android.synthetic.main.fragment_config_detail.authority
+import kotlinx.android.synthetic.main.fragment_config_detail.editNameAuthority
 import kotlinx.android.synthetic.main.fragment_config_detail.name
 import kotlinx.android.synthetic.main.fragment_config_detail.view.*
 
@@ -57,8 +58,12 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView {
         configLiveData.observe(viewLifecycleOwner, object : Observer<Config> {
             override fun onChanged(loadedConfig: Config) {
                 configLiveData.removeObserver(this)
-                name.setText(loadedConfig.name)
-                authority.setText(loadedConfig.authority)
+                name.text = loadedConfig.name
+                authority.text = loadedConfig.authority
+
+                editNameAuthority.setOnClickListener {
+
+                }
             }
         })
 
