@@ -9,7 +9,6 @@ import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
 import ch.pete.appconfigapp.db.AppConfigDao
 import ch.pete.appconfigapp.model.Config
-import ch.pete.appconfigapp.model.KeyValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,11 +25,19 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
     fun configById(configId: Long): LiveData<Config> =
         appConfigDao.fetchConfigById(configId)
 
+    fun keyValueEntriesByConfigId(configId: Long) =
+        appConfigDao.keyValueEntriesByConfigId(configId)
+
     fun executionResultEntriesByConfigId(configId: Long) =
         appConfigDao.fetchExecutionResultEntriesByConfigId(configId)
 
-    fun keyValueEntriesByConfigId(configId: Long) =
-        appConfigDao.keyValueEntriesByConfigId(configId)
+    fun onEditNameAuthorityClicked(configId: Long) {
+        view.showNameAuthorityFragment(configId)
+    }
+
+    fun onEditKeyValueClicked(configId: Long) {
+        view.showKeyValuesFragment(configId)
+    }
 
     fun onDetailExecuteClicked(configId: Long) {
         viewModelScope.launch {
@@ -47,20 +54,6 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
             if (!foundItem) {
                 Toast.makeText(getApplication(), R.string.error_occurred, Toast.LENGTH_LONG).show()
             }
-        }
-    }
-
-    fun onAddKeyValueClicked(configId: Long) {
-        view.showKeyValueDetails(configId, null)
-    }
-
-    fun onKeyValueEntryClicked(keyValue: KeyValue) {
-        view.showKeyValueDetails(keyValue.configId, keyValue.id)
-    }
-
-    fun onKeyValueDeleteClicked(keyValue: KeyValue) {
-        viewModelScope.launch {
-            appConfigDao.deleteKeyValue(keyValue)
         }
     }
 }

@@ -1,5 +1,6 @@
 package ch.pete.appconfigapp.configdetail
 
 interface ConfigDetailView {
-    fun showKeyValueDetails(configId: Long, keyValueId: Long?)
+    fun showNameAuthorityFragment(configId: Long)
+    fun showKeyValuesFragment(configId: Long)
 }

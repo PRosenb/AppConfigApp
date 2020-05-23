@@ -13,16 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
-import ch.pete.appconfigapp.keyvalue.KeyValueDialogFragment
+import ch.pete.appconfigapp.keyvalue.KeyValuesFragment
 import ch.pete.appconfigapp.model.Config
+import ch.pete.appconfigapp.model.KeyValue
 import ch.pete.appconfigapp.nameauthority.NameAuthorityFragment
-import kotlinx.android.synthetic.main.fragment_config_detail.authority
-import kotlinx.android.synthetic.main.fragment_config_detail.editNameAuthority
-import kotlinx.android.synthetic.main.fragment_config_detail.name
-import kotlinx.android.synthetic.main.fragment_config_detail.view.addKeyValueButton
+import kotlinx.android.synthetic.main.fragment_config_detail.*
 import kotlinx.android.synthetic.main.fragment_config_detail.view.execute
 import kotlinx.android.synthetic.main.fragment_config_detail.view.executionResults
-import kotlinx.android.synthetic.main.fragment_config_detail.view.keyValues
 import timber.log.Timber
 
 class ConfigDetailFragment : Fragment(), ConfigDetailView {
@@ -58,18 +55,35 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView {
     }
 
     private fun initView(rootView: View, configId: Long) {
-        val configLiveData = viewModel.configById(configId)
-        configLiveData.observe(viewLifecycleOwner, object : Observer<Config> {
+        val configLiveDataConfig = viewModel.configById(configId)
+        configLiveDataConfig.observe(viewLifecycleOwner, object : Observer<Config> {
             override fun onChanged(loadedConfig: Config) {
-                configLiveData.removeObserver(this)
+                configLiveDataConfig.removeObserver(this)
                 name.text = loadedConfig.name
                 authority.text = loadedConfig.authority
 
                 loadedConfig.id?.let { configId ->
                     editNameAuthority.setOnClickListener {
-                        showNameAuthorityFragment(configId)
+                        viewModel.onEditNameAuthorityClicked(configId)
                     }
                 } ?: Timber.e("loadedConfig.id is null")
+            }
+        })
+
+        val configLiveDataKeyValues = viewModel.keyValueEntriesByConfigId(configId)
+        configLiveDataKeyValues.observe(viewLifecycleOwner, object : Observer<List<KeyValue>> {
+            override fun onChanged(keyValues: List<KeyValue>) {
+                configLiveDataKeyValues.removeObserver(this)
+                keyValue.text =
+                    context?.resources?.getQuantityString(
+                        R.plurals.keys_count,
+                        keyValues.size,
+                        keyValues.size
+                    ) ?: ""
+
+                editKeyValue.setOnClickListener {
+                    viewModel.onEditKeyValueClicked(configId)
+                }
             }
         })
 
@@ -78,11 +92,6 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView {
         }
 
         initExecutionResultView(configId, rootView)
-        initKeyValuesView(configId, rootView)
-
-        rootView.addKeyValueButton.setOnClickListener {
-            viewModel.onAddKeyValueClicked(configId)
-        }
     }
 
     private fun initExecutionResultView(configId: Long, rootView: View) {
@@ -112,32 +121,7 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView {
         }
     }
 
-    private fun initKeyValuesView(configId: Long, rootView: View) {
-        val adapter = KeyValueAdapter(
-            onItemClickListener = {
-                viewModel.onKeyValueEntryClicked(it)
-            },
-            onDeleteClickListener = {
-                viewModel.onKeyValueDeleteClicked(it)
-            }
-        )
-        viewModel.keyValueEntriesByConfigId(configId)
-            .observe(viewLifecycleOwner, Observer {
-                adapter.submitList(it)
-            })
-        rootView.keyValues.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(activity)
-            val dividerItemDecoration = DividerItemDecoration(
-                context,
-                DividerItemDecoration.VERTICAL
-            )
-            addItemDecoration(dividerItemDecoration)
-            this.adapter = adapter
-        }
-    }
-
-    fun showNameAuthorityFragment(configId: Long) {
+    override fun showNameAuthorityFragment(configId: Long) {
         val fragmentTransaction = parentFragmentManager.beginTransaction()
         val fragment = NameAuthorityFragment()
 
@@ -154,13 +138,20 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView {
         fragmentTransaction.commit()
     }
 
-    override fun showKeyValueDetails(configId: Long, keyValueId: Long?) {
-        val keyValueDialogFragment =
-            KeyValueDialogFragment()
-        val args = Bundle()
-        args.putLong(KeyValueDialogFragment.ARG_CONFIG_ID, configId)
-        keyValueId?.let { args.putLong(KeyValueDialogFragment.ARG_KEY_VALUE_ID, it) }
-        keyValueDialogFragment.arguments = args
-        keyValueDialogFragment.show(parentFragmentManager, "keyValueDialogFragment")
+    override fun showKeyValuesFragment(configId: Long) {
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        val fragment = KeyValuesFragment()
+
+        fragment.arguments = Bundle().apply {
+            putLong(NameAuthorityFragment.ARG_CONFIG_ID, configId)
+        }
+        fragmentTransaction
+            .replace(
+                R.id.fragmentContainer,
+                fragment
+            )
+
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 }

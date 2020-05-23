@@ -1,4 +1,4 @@
-package ch.pete.appconfigapp.configdetail
+package ch.pete.appconfigapp.keyvalue
 
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +15,8 @@ import com.chauthai.swipereveallayout.ViewBinderHelper
 import kotlinx.android.synthetic.main.config_entry_list_item.view.delete
 import kotlinx.android.synthetic.main.config_entry_list_item.view.mainLayout
 import kotlinx.android.synthetic.main.config_entry_list_item.view.swipeLayout
-import kotlinx.android.synthetic.main.key_value_list_item.view.*
+import kotlinx.android.synthetic.main.key_value_list_item.view.key
+import kotlinx.android.synthetic.main.key_value_list_item.view.value
 
 class KeyValueAdapter(
     private val onItemClickListener: ((KeyValue) -> Unit)?,
