@@ -1,4 +1,4 @@
-package ch.pete.appconfigapp.configdetail
+package ch.pete.appconfigapp.keyvalue
 
 import android.app.Activity
 import android.os.Bundle

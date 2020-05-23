@@ -14,15 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
+import ch.pete.appconfigapp.keyvalue.KeyValueDialogFragment
 import ch.pete.appconfigapp.model.Config
 import kotlinx.android.synthetic.main.fragment_config_detail.authority
 import kotlinx.android.synthetic.main.fragment_config_detail.name
-import kotlinx.android.synthetic.main.fragment_config_detail.view.addKeyValueButton
-import kotlinx.android.synthetic.main.fragment_config_detail.view.authority
-import kotlinx.android.synthetic.main.fragment_config_detail.view.execute
-import kotlinx.android.synthetic.main.fragment_config_detail.view.executionResults
-import kotlinx.android.synthetic.main.fragment_config_detail.view.keyValues
-import kotlinx.android.synthetic.main.fragment_config_detail.view.name
+import kotlinx.android.synthetic.main.fragment_config_detail.view.*
 
 class ConfigDetailFragment : Fragment(), ConfigDetailView {
     companion object {
@@ -142,7 +138,8 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView {
     }
 
     override fun showKeyValueDetails(configId: Long, keyValueId: Long?) {
-        val keyValueDialogFragment = KeyValueDialogFragment()
+        val keyValueDialogFragment =
+            KeyValueDialogFragment()
         val args = Bundle()
         args.putLong(KeyValueDialogFragment.ARG_CONFIG_ID, configId)
         keyValueId?.let { args.putLong(KeyValueDialogFragment.ARG_KEY_VALUE_ID, it) }

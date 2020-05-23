@@ -1,4 +1,4 @@
-package ch.pete.appconfigapp.configdetail
+package ch.pete.appconfigapp.keyvalue
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
