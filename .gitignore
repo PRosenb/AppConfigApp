@@ -15,3 +15,4 @@
 .idea
 signing.properties
 release.keystore
+google-services.json
