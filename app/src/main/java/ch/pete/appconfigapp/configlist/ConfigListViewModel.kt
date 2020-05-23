@@ -11,6 +11,7 @@ import ch.pete.appconfigapp.model.ConfigEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 
 class ConfigListViewModel(application: Application) : AndroidViewModel(application) {
@@ -59,9 +60,9 @@ class ConfigListViewModel(application: Application) : AndroidViewModel(applicati
 
     fun onExecuteClicked(configEntry: ConfigEntry) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                mainActivityViewModel.callContentProviderAndShowResult(configEntry)
-            }
+            configEntry.config.id?.let {
+                mainActivityViewModel.callContentProvider(it)
+            } ?: Timber.e("configEntry.config.id is null")
         }
     }
 }

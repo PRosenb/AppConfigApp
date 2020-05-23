@@ -3,18 +3,39 @@ package ch.pete.appconfigapp
 import android.app.Application
 import android.content.ContentValues
 import android.net.Uri
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import ch.pete.appconfigapp.db.DatabaseBuilder
 import ch.pete.appconfigapp.model.ConfigEntry
 import ch.pete.appconfigapp.model.ExecutionResult
 import ch.pete.appconfigapp.model.ResultType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
     val appConfigDatabase = DatabaseBuilder.builder(application).build()
     private val appConfigDao = appConfigDatabase.appConfigDao()
 
+
+    suspend fun callContentProvider(configId: Long) {
+        val foundItem = withContext(Dispatchers.IO) {
+            val configEntry = appConfigDao.fetchConfigEntryById(configId)
+            if (configEntry != null) {
+                callContentProviderAndStoreResult(configEntry)
+                true
+            } else {
+                Timber.e("ConfigEntry with id '$configId' not found.")
+                false
+            }
+        }
+        if (!foundItem) {
+            Toast.makeText(getApplication(), R.string.error_occurred, Toast.LENGTH_LONG).show()
+        }
+    }
+
     @Suppress("TooGenericExceptionCaught")
-    suspend fun callContentProviderAndShowResult(configEntry: ConfigEntry) {
+    private suspend fun callContentProviderAndStoreResult(configEntry: ConfigEntry) {
         val contentValues = configEntry.keyValues
             .fold(ContentValues()) { contentValues, keyValue ->
                 contentValues.put(keyValue.key, keyValue.value)

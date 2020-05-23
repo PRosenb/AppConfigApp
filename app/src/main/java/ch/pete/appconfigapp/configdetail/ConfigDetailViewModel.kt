@@ -1,18 +1,13 @@
 package ch.pete.appconfigapp.configdetail
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import ch.pete.appconfigapp.MainActivityViewModel
-import ch.pete.appconfigapp.R
 import ch.pete.appconfigapp.db.AppConfigDao
 import ch.pete.appconfigapp.model.Config
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 class ConfigDetailViewModel(application: Application) : AndroidViewModel(application) {
     lateinit var view: ConfigDetailView
@@ -44,19 +39,7 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
 
     fun onDetailExecuteClicked(configId: Long) {
         viewModelScope.launch {
-            val foundItem = withContext(Dispatchers.IO) {
-                val configEntry = appConfigDao.fetchConfigEntryById(configId)
-                if (configEntry != null) {
-                    mainActivityViewModel.callContentProviderAndShowResult(configEntry)
-                    true
-                } else {
-                    Timber.e("ConfigEntry with id '$configId' not found.")
-                    false
-                }
-            }
-            if (!foundItem) {
-                Toast.makeText(getApplication(), R.string.error_occurred, Toast.LENGTH_LONG).show()
-            }
+            mainActivityViewModel.callContentProvider(configId)
         }
     }
 }
