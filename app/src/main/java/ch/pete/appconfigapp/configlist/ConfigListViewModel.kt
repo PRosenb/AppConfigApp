@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.Calendar
 
 
 class ConfigListViewModel(application: Application) : AndroidViewModel(application) {
@@ -28,7 +29,7 @@ class ConfigListViewModel(application: Application) : AndroidViewModel(applicati
     fun onAddConfigClicked() {
         viewModelScope.launch {
             val configId = withContext(Dispatchers.IO) {
-                appConfigDao.insertEmptyConfig()
+                appConfigDao.insertEmptyConfig(Calendar.getInstance())
             }
             view.showDetailsOfNewItem(configId)
         }

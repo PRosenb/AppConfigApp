@@ -31,9 +31,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             val apiConfigEntries =
                 apiConfigEntriesRaw
                     .map {
-                        if (it.timestamp == null) {
+                        if (it.creationTimestamp == null) {
                             it.copy(
-                                timestamp = Calendar.getInstance()
+                                creationTimestamp = Calendar.getInstance()
                             )
                         } else {
                             it

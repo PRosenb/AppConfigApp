@@ -7,10 +7,12 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import ch.pete.appconfigapp.model.CentralConfig
 import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.ConfigEntry
 import ch.pete.appconfigapp.model.ExecutionResult
 import ch.pete.appconfigapp.model.KeyValue
+import java.util.Calendar
 
 @Suppress("TooManyFunctions")
 @Dao
@@ -39,6 +41,9 @@ interface AppConfigDao {
 
     @Query("SELECT * FROM key_value WHERE id = :keyValueId")
     fun keyValueEntryByKeyValueId(keyValueId: Long): LiveData<KeyValue>
+
+    @Query("SELECT * FROM central_config")
+    fun centralConfigs(): LiveData<List<CentralConfig>>
 
     @Transaction
     suspend fun deleteConfigEntry(configEntry: ConfigEntry) {
@@ -81,8 +86,8 @@ interface AppConfigDao {
         )
     }
 
-    @Query("INSERT INTO config (name, authority) VALUES ('','')")
-    suspend fun insertEmptyConfig(): Long
+    @Query("INSERT INTO config (name, authority, creationTimestamp) VALUES ('','', :creationTimestamp)")
+    suspend fun insertEmptyConfig(creationTimestamp: Calendar): Long
 
     @Insert
     suspend fun insertConfig(config: Config): Long

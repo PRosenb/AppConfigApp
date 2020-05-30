@@ -9,7 +9,7 @@ data class ApiConfigEntry(
     val centralConfigId: String?,
     val name: String,
     val authority: String,
-    val timestamp: Calendar?,
+    val creationTimestamp: Calendar?,
 
     val keyValues: List<KeyValue>
 )

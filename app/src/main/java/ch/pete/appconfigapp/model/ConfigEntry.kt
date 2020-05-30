@@ -1,5 +1,6 @@
 package ch.pete.appconfigapp.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -29,7 +30,12 @@ data class Config(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
     val name: String,
-    val authority: String
+    val authority: String,
+    val creationTimestamp: Calendar = Calendar.getInstance(),
+    val centralConfigExternalId: String? = null,
+    val centralConfigId: Long? = null,
+    @ColumnInfo(defaultValue = "0")
+    val sort: Long = 0
 )
 
 @Entity(tableName = "key_value")
@@ -55,3 +61,24 @@ data class ExecutionResult(
 enum class ResultType(val id: Int) {
     SUCCESS(0), ACCESS_DENIED(1), EXCEPTION(2)
 }
+
+data class CentralConfigWithConfig(
+    @Embedded
+    val centralConfig: CentralConfig,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "centralConfigId"
+    )
+    val configs: List<Config> = emptyList()
+)
+
+@Entity(tableName = "central_config")
+data class CentralConfig(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long? = null,
+    val name: String,
+    val url: String,
+    @ColumnInfo(defaultValue = "1")
+    val enabled: Boolean = true
+)
