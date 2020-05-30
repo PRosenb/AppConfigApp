@@ -43,7 +43,7 @@ class ConfigListViewModel(application: Application) : AndroidViewModel(applicati
 
     fun onConfigEntryCloneClicked(configEntry: ConfigEntry) {
         viewModelScope.launch {
-            appConfigDao.cloneConfigEntryWithoutResults(
+            appConfigDao.cloneConfigEntryWithoutResultsAndCentralConfig(
                 configEntry,
                 String.format(
                     getApplication<Application>().getString(R.string.cloned_name),

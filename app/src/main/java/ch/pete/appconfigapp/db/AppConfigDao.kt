@@ -59,10 +59,15 @@ interface AppConfigDao {
     }
 
     @Transaction
-    suspend fun cloneConfigEntryWithoutResults(configEntry: ConfigEntry, newName: String) {
+    suspend fun cloneConfigEntryWithoutResultsAndCentralConfig(
+        configEntry: ConfigEntry,
+        newName: String
+    ) {
         val configId = insertConfig(
             configEntry.config.copy(
                 id = null,
+                centralConfigExternalId = null,
+                centralConfigId = null,
                 name = newName
             )
         )
@@ -122,8 +127,8 @@ interface AppConfigDao {
     @Query("UPDATE central_config SET name = :name, url = :url WHERE id = :id")
     suspend fun updateCentralConfig(name: String, url: String, id: Long)
 
-    @Query("DELETE FROM config")
-    suspend fun deleteAllConfigs()
+    @Query("DELETE FROM config WHERE centralConfigId NOT NULL")
+    suspend fun deleteAllCentralConfigs()
 
     @Delete
     suspend fun deleteConfig(config: Config): Int

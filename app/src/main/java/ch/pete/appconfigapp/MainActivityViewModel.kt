@@ -38,7 +38,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         withContext(Dispatchers.IO) {
             val centralConfigs = appConfigDao.centralConfigsSuspend()
 
-            appConfigDao.deleteAllConfigs()
+            appConfigDao.deleteAllCentralConfigs()
             centralConfigs
                 .filter { it.enabled }
                 .forEach {
