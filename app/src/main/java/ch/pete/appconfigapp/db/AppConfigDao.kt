@@ -32,6 +32,9 @@ interface AppConfigDao {
     @Query("SELECT * FROM config WHERE config.id = :configId")
     fun fetchConfigById(configId: Long): LiveData<Config>
 
+    @Query("SELECT * FROM config WHERE centralConfigId = :centralConfigId")
+    suspend fun fetchConfigByCentralConfigId(centralConfigId: Long): List<Config>
+
     @Transaction
     @Query("SELECT * FROM execution_result WHERE configId = :configId ORDER BY timestamp DESC")
     fun fetchExecutionResultEntriesByConfigId(configId: Long): LiveData<List<ExecutionResult>>
@@ -97,6 +100,22 @@ interface AppConfigDao {
         )
     }
 
+    @Transaction
+    suspend fun updateConfigWithKeyValues(config: Config, keyValues: List<KeyValue>) {
+        updateConfig(config)
+
+        if (config.id != null) {
+            deleteKeyValuesByConfigId(config.id)
+            insertKeyValues(
+                keyValues.map {
+                    it.copy(
+                        configId = config.id
+                    )
+                }
+            )
+        }
+    }
+
     @Query("INSERT INTO config (name, authority, creationTimestamp) VALUES ('','', :creationTimestamp)")
     suspend fun insertEmptyConfig(creationTimestamp: Calendar): Long
 
@@ -114,6 +133,9 @@ interface AppConfigDao {
 
     @Query("INSERT INTO central_config (name, url) VALUES ('','')")
     suspend fun insertCentralConfig(): Long
+
+    @Update
+    suspend fun updateConfig(config: Config): Int
 
     @Query("UPDATE config SET name = :name, authority = :authority WHERE id = :configId")
     suspend fun updateConfigNameAndAuthority(name: String, authority: String, configId: Long)
@@ -139,9 +161,15 @@ interface AppConfigDao {
     @Delete
     suspend fun deleteKeyValue(keyValue: KeyValue): Int
 
+    @Query("DELETE FROM key_value WHERE configId = :configId")
+    suspend fun deleteKeyValuesByConfigId(configId: Long): Int
+
     @Delete
     suspend fun deleteExecutionResults(executionResults: List<ExecutionResult>): Int
 
     @Delete
     suspend fun deleteCentralConfig(centralConfig: CentralConfig)
+
+    @Query("DELETE FROM config WHERE id IN (:ids)")
+    suspend fun deleteConfigs(ids: List<Long>)
 }

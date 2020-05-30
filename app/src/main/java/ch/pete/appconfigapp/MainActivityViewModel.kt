@@ -6,78 +6,27 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import ch.pete.appconfigapp.api.CentralConfigService
 import ch.pete.appconfigapp.db.DatabaseBuilder
-import ch.pete.appconfigapp.model.CentralConfig
-import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.ConfigEntry
 import ch.pete.appconfigapp.model.ExecutionResult
 import ch.pete.appconfigapp.model.ResultType
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import ch.pete.appconfigapp.sync.CentralConfigSyncer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.util.Calendar
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
     lateinit var view: MainActivityView
 
     val appConfigDatabase = DatabaseBuilder.builder(application).build()
     private val appConfigDao = appConfigDatabase.appConfigDao()
-    private val apiService = CentralConfigService()
+    val centralConfigSyncer = CentralConfigSyncer(appConfigDao)
 
     fun init() {
         viewModelScope.launch {
-            apiService.init()
-            syncCentralConfig()
-        }
-    }
-
-    suspend fun syncCentralConfig() {
-        withContext(Dispatchers.IO) {
-            val centralConfigs = appConfigDao.centralConfigsSuspend()
-
-            appConfigDao.deleteAllCentralConfigs()
-            centralConfigs
-                .filter { it.enabled }
-                .forEach {
-                    syncCentralConfig(it)
-                }
-        }
-    }
-
-    private suspend fun syncCentralConfig(centralConfig: CentralConfig) {
-        try {
-            val apiConfigEntriesRaw =
-                apiService.fetchConfig(centralConfig.url)
-
-            val apiConfigEntries =
-                apiConfigEntriesRaw
-                    .map {
-                        if (it.creationTimestamp == null) {
-                            it.copy(
-                                creationTimestamp = Calendar.getInstance()
-                            )
-                        } else {
-                            it
-                        }
-                    }
-
-            apiConfigEntries.forEach {
-                appConfigDao.insertConfigWithKeyValues(
-                    config = Config(
-                        name = it.name,
-                        authority = it.authority,
-                        creationTimestamp = it.creationTimestamp ?: Calendar.getInstance(),
-                        centralConfigExternalId = it.centralConfigId,
-                        centralConfigId = centralConfig.id
-                    ),
-                    keyValues = it.keyValues
-                )
-            }
-        } catch (e: MismatchedInputException) {
-            Timber.e("Could not fetch central config", e)
+            centralConfigSyncer.init()
+            centralConfigSyncer.sync()
         }
     }
 

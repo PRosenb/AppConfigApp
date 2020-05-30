@@ -44,7 +44,7 @@ class CentralConfigViewModel(application: Application) : AndroidViewModel(applic
 
     fun onPause() {
         mainActivityViewModel.viewModelScope.launch {
-            mainActivityViewModel.syncCentralConfig()
+            mainActivityViewModel.centralConfigSyncer.sync()
         }
     }
 }
