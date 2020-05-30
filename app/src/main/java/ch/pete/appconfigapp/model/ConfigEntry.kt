@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.util.Calendar
@@ -34,6 +35,9 @@ data class ConfigEntry(
             childColumns = ["centralConfigId"],
             onDelete = CASCADE
         )
+    ],
+    indices = [
+        Index(value = ["centralConfigId"])
     ]
 )
 data class Config(
@@ -58,6 +62,9 @@ data class Config(
             childColumns = ["configId"],
             onDelete = CASCADE
         )
+    ],
+    indices = [
+        Index(value = ["configId"])
     ]
 )
 data class KeyValue(
@@ -77,6 +84,9 @@ data class KeyValue(
             childColumns = ["configId"],
             onDelete = CASCADE
         )
+    ],
+    indices = [
+        Index(value = ["configId"])
     ]
 )
 data class ExecutionResult(

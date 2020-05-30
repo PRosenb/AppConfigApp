@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a461e565858d3ab9d3208fe321bad2a1",
+    "identityHash": "3994daddd59c307b65e50396e15bda7e",
     "entities": [
       {
         "tableName": "config",
@@ -58,7 +58,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_config_centralConfigId",
+            "unique": false,
+            "columnNames": [
+              "centralConfigId"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_config_centralConfigId` ON `${TABLE_NAME}` (`centralConfigId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "central_config",
@@ -108,7 +117,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_key_value_configId",
+            "unique": false,
+            "columnNames": [
+              "configId"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_key_value_configId` ON `${TABLE_NAME}` (`configId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "config",
@@ -170,7 +188,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_execution_result_configId",
+            "unique": false,
+            "columnNames": [
+              "configId"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_execution_result_configId` ON `${TABLE_NAME}` (`configId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "config",
@@ -228,7 +255,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a461e565858d3ab9d3208fe321bad2a1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3994daddd59c307b65e50396e15bda7e')"
     ]
   }
 }
