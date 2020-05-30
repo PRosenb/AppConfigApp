@@ -41,4 +41,10 @@ class CentralConfigViewModel(application: Application) : AndroidViewModel(applic
             appConfigDao.deleteCentralConfig(centralConfig)
         }
     }
+
+    fun onPause() {
+        mainActivityViewModel.viewModelScope.launch {
+            mainActivityViewModel.syncCentralConfig()
+        }
+    }
 }

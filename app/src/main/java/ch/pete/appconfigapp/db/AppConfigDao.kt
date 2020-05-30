@@ -45,6 +45,9 @@ interface AppConfigDao {
     @Query("SELECT * FROM central_config")
     fun centralConfigs(): LiveData<List<CentralConfig>>
 
+    @Query("SELECT * FROM central_config")
+    suspend fun centralConfigsSuspend(): List<CentralConfig>
+
     @Query("SELECT * FROM central_config where id = :id")
     fun centralConfigById(id: Long): LiveData<CentralConfig>
 

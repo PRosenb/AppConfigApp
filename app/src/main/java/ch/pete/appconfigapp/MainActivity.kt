@@ -26,6 +26,7 @@ class MainActivity :
 
         viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         viewModel.view = this
+        viewModel.init()
 
         supportFragmentManager.addOnBackStackChangedListener(this)
         shouldDisplayHomeUp()

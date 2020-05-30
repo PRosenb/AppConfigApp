@@ -42,6 +42,11 @@ class CentralConfigFragment : Fragment(), CentralConfigView {
         return rootView
     }
 
+    override fun onPause() {
+        viewModel.onPause()
+        super.onPause()
+    }
+
     private fun initView(rootView: View) {
         val centralConfigAdapter = CentralConfigAdapter(
             onItemClickListener = {
