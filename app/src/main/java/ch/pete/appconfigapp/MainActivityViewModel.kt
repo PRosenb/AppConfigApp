@@ -5,18 +5,50 @@ import android.content.ContentValues
 import android.net.Uri
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import ch.pete.appconfigapp.api.CentralConfigService
 import ch.pete.appconfigapp.db.DatabaseBuilder
+import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.ConfigEntry
 import ch.pete.appconfigapp.model.ExecutionResult
 import ch.pete.appconfigapp.model.ResultType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.Calendar
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
     val appConfigDatabase = DatabaseBuilder.builder(application).build()
     private val appConfigDao = appConfigDatabase.appConfigDao()
 
+    suspend fun syncCentralConfig() {
+        withContext(Dispatchers.IO) {
+            val apiService = CentralConfigService()
+            apiService.init()
+
+            val apiConfigEntriesRaw =
+                apiService.fetchConfig("https://pete.ch/trabr/config.yaml")
+
+            val apiConfigEntries =
+                apiConfigEntriesRaw
+                    .map {
+                        if (it.timestamp == null) {
+                            it.copy(
+                                timestamp = Calendar.getInstance()
+                            )
+                        } else {
+                            it
+                        }
+                    }
+
+            appConfigDao.deleteAllConfigs()
+            apiConfigEntries.forEach {
+                appConfigDao.insertConfigWithKeyValues(
+                    config = Config(name = it.name, authority = it.authority),
+                    keyValues = it.keyValues
+                )
+            }
+        }
+    }
 
     suspend fun callContentProvider(configId: Long) {
         val foundItem = withContext(Dispatchers.IO) {

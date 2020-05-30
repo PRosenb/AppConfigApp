@@ -68,6 +68,19 @@ interface AppConfigDao {
         insertKeyValues(keyValues)
     }
 
+    @Transaction
+    suspend fun insertConfigWithKeyValues(config: Config, keyValues: List<KeyValue>) {
+        val configId = insertConfig(config)
+
+        insertKeyValues(
+            keyValues.map {
+                it.copy(
+                    configId = configId
+                )
+            }
+        )
+    }
+
     @Query("INSERT INTO config (name, authority) VALUES ('','')")
     suspend fun insertEmptyConfig(): Long
 
@@ -94,6 +107,9 @@ interface AppConfigDao {
 
     @Update
     suspend fun updateExecutionResult(executionResults: List<ExecutionResult>): Int
+
+    @Query("DELETE FROM config")
+    suspend fun deleteAllConfigs()
 
     @Delete
     suspend fun deleteConfig(config: Config): Int
