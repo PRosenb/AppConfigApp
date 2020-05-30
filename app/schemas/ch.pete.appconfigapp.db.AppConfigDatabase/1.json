@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c847bac5cf214cf9d4828b991656cec1",
+    "identityHash": "a461e565858d3ab9d3208fe321bad2a1",
     "entities": [
       {
         "tableName": "config",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `authority` TEXT NOT NULL, `creationTimestamp` TEXT NOT NULL, `centralConfigExternalId` TEXT, `centralConfigId` INTEGER, `sort` INTEGER NOT NULL DEFAULT 0)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `authority` TEXT NOT NULL, `creationTimestamp` TEXT NOT NULL, `centralConfigExternalId` TEXT, `centralConfigId` INTEGER, `sort` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`centralConfigId`) REFERENCES `central_config`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -59,11 +59,23 @@
           "autoGenerate": true
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "central_config",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "centralConfigId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "key_value",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `configId` INTEGER NOT NULL, `key` TEXT NOT NULL, `value` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `configId` INTEGER NOT NULL, `key` TEXT NOT NULL, `value` TEXT, FOREIGN KEY(`configId`) REFERENCES `config`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -97,11 +109,23 @@
           "autoGenerate": true
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "config",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "configId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "execution_result",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `configId` INTEGER NOT NULL, `timestamp` TEXT NOT NULL, `resultType` INTEGER NOT NULL, `valuesCount` INTEGER NOT NULL, `message` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `configId` INTEGER NOT NULL, `timestamp` TEXT NOT NULL, `resultType` INTEGER NOT NULL, `valuesCount` INTEGER NOT NULL, `message` TEXT, FOREIGN KEY(`configId`) REFERENCES `config`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -147,7 +171,19 @@
           "autoGenerate": true
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "config",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "configId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "central_config",
@@ -192,7 +228,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c847bac5cf214cf9d4828b991656cec1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a461e565858d3ab9d3208fe321bad2a1')"
     ]
   }
 }

@@ -3,6 +3,8 @@ package ch.pete.appconfigapp.model
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.util.Calendar
@@ -24,7 +26,16 @@ data class ConfigEntry(
     val executionResults: List<ExecutionResult> = emptyList()
 )
 
-@Entity(tableName = "config")
+@Entity(
+    tableName = "config", foreignKeys = [
+        ForeignKey(
+            entity = CentralConfig::class,
+            parentColumns = ["id"],
+            childColumns = ["centralConfigId"],
+            onDelete = CASCADE
+        )
+    ]
+)
 data class Config(
     // 0L means not set
     @PrimaryKey(autoGenerate = true)
@@ -38,7 +49,17 @@ data class Config(
     val sort: Long = 0
 )
 
-@Entity(tableName = "key_value")
+@Entity(
+    tableName = "key_value",
+    foreignKeys = [
+        ForeignKey(
+            entity = Config::class,
+            parentColumns = ["id"],
+            childColumns = ["configId"],
+            onDelete = CASCADE
+        )
+    ]
+)
 data class KeyValue(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
@@ -47,7 +68,17 @@ data class KeyValue(
     val value: String?
 )
 
-@Entity(tableName = "execution_result")
+@Entity(
+    tableName = "execution_result",
+    foreignKeys = [
+        ForeignKey(
+            entity = Config::class,
+            parentColumns = ["id"],
+            childColumns = ["configId"],
+            onDelete = CASCADE
+        )
+    ]
+)
 data class ExecutionResult(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
