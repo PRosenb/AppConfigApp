@@ -20,25 +20,29 @@ class CentralConfigSyncer(private val appConfigDao: AppConfigDao) {
         }
     }
 
-    suspend fun sync() {
+    /**
+     * @return the total amount of centralSync items synced
+     */
+    suspend fun sync(): Int =
         withContext(Dispatchers.IO) {
             val centralConfigs = appConfigDao.centralConfigsSuspend()
 
-            centralConfigs
+            val filteredCentralConfigs = centralConfigs
                 .filter { it.enabled }
-                .forEach {
+
+            filteredCentralConfigs
+                .map {
                     sync(it)
                 }
+                .sum()
         }
-    }
 
-    private suspend fun sync(centralConfig: CentralConfig) {
-        try {
-            if (centralConfig.id == null) {
-                Timber.e("centralConfig.id null")
-                return
-            }
-
+    private suspend fun sync(centralConfig: CentralConfig): Int {
+        if (centralConfig.id == null) {
+            Timber.e("centralConfig.id null")
+            return 0
+        }
+        return try {
             val apiConfigEntries =
                 fetchAndPreprocessCentralConfigEntries(centralConfig)
 
@@ -62,8 +66,10 @@ class CentralConfigSyncer(private val appConfigDao: AppConfigDao) {
                     insertConfig(apiConfigEntry, centralConfig.id)
                 }
             }
+            apiConfigEntries.size
         } catch (e: MismatchedInputException) {
             Timber.e("Could not fetch central config", e)
+            0
         }
     }
 

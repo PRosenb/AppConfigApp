@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import ch.pete.appconfigapp.centralconfig.CentralConfigFragment
+import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 
 
@@ -51,6 +52,10 @@ class MainActivity :
                 viewModel.onMenuCentralConfig()
                 true
             }
+            R.id.sync -> {
+                viewModel.onMenuSync()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -83,5 +88,12 @@ class MainActivity :
 
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
+    }
+
+    override fun showSnackbar(message: String) {
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            message, Snackbar.LENGTH_LONG
+        ).show()
     }
 }

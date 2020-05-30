@@ -34,6 +34,17 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         view.showCentralConfig()
     }
 
+    fun onMenuSync() {
+        viewModelScope.launch {
+            val syncedItemsCount = centralConfigSyncer.sync()
+            if (syncedItemsCount == 0) {
+                view.showSnackbar(
+                    getApplication<Application>().getString(R.string.no_central_config)
+                )
+            }
+        }
+    }
+
     suspend fun callContentProvider(configId: Long) {
         val foundItem = withContext(Dispatchers.IO) {
             val configEntry = appConfigDao.fetchConfigEntryById(configId)

@@ -26,4 +26,6 @@
     <string name="error_occurred">An error occurred, please try again.</string>
     <string name="central_config">Central Config</string>
     <string name="url_">URL:</string>
+    <string name="sync_central_config">Sync Central Config</string>
+    <string name="no_central_config">No config synced, please add a URL.</string>
 </resources>

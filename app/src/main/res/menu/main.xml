@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/sync"
+        android:icon="@android:drawable/ic_popup_sync"
+        android:title="@string/sync_central_config"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/centralConfig"
-        android:icon="@android:drawable/ic_menu_preferences"
+        android:icon="@android:drawable/ic_menu_manage"
         android:title="@string/central_config"
         app:showAsAction="ifRoom" />
 </menu>
