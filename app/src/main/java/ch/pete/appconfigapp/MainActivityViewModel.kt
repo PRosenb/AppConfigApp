@@ -17,6 +17,8 @@ import timber.log.Timber
 import java.util.Calendar
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
+    lateinit var view: MainActivityView
+
     val appConfigDatabase = DatabaseBuilder.builder(application).build()
     private val appConfigDao = appConfigDatabase.appConfigDao()
 
@@ -48,6 +50,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 )
             }
         }
+    }
+
+    fun onMenuCentralConfig() {
+        view.showCentralConfig()
     }
 
     suspend fun callContentProvider(configId: Long) {

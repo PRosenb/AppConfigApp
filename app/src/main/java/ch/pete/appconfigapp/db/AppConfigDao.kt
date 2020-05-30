@@ -45,6 +45,9 @@ interface AppConfigDao {
     @Query("SELECT * FROM central_config")
     fun centralConfigs(): LiveData<List<CentralConfig>>
 
+    @Query("SELECT * FROM central_config where id = :id")
+    fun centralConfigById(id: Long): LiveData<CentralConfig>
+
     @Transaction
     suspend fun deleteConfigEntry(configEntry: ConfigEntry) {
         deleteConfig(configEntry.config)
@@ -101,8 +104,8 @@ interface AppConfigDao {
     @Insert
     suspend fun insertExecutionResult(executionResult: ExecutionResult): Long
 
-    @Insert
-    suspend fun insertExecutionResults(executionResults: List<ExecutionResult>)
+    @Query("INSERT INTO central_config (name, url) VALUES ('','')")
+    suspend fun insertCentralConfig(): Long
 
     @Query("UPDATE config SET name = :name, authority = :authority WHERE id = :configId")
     suspend fun updateConfigNameAndAuthority(name: String, authority: String, configId: Long)
@@ -112,6 +115,9 @@ interface AppConfigDao {
 
     @Update
     suspend fun updateExecutionResult(executionResults: List<ExecutionResult>): Int
+
+    @Query("UPDATE central_config SET name = :name, url = :url WHERE id = :id")
+    suspend fun updateCentralConfig(name: String, url: String, id: Long)
 
     @Query("DELETE FROM config")
     suspend fun deleteAllConfigs()
@@ -127,4 +133,7 @@ interface AppConfigDao {
 
     @Delete
     suspend fun deleteExecutionResults(executionResults: List<ExecutionResult>): Int
+
+    @Delete
+    suspend fun deleteCentralConfig(centralConfig: CentralConfig)
 }

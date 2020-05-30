@@ -24,4 +24,6 @@
     <string name="value">Value</string>
     <string name="null_checkbox">Null</string>
     <string name="error_occurred">An error occurred, please try again.</string>
+    <string name="central_config">Central Config</string>
+    <string name="url_">URL:</string>
 </resources>
