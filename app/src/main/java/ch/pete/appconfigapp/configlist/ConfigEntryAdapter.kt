@@ -96,9 +96,15 @@ class ConfigEntryAdapter(
                 viewBinderHelper.closeLayout(configEntry.config.id.toString())
             }
         }
-        onDeleteClickListener?.let {
-            holder.delete.setOnClickListener {
-                it(configEntry)
+
+        if (configEntry.config.readonly) {
+            holder.delete.visibility = View.GONE
+        } else {
+            holder.delete.visibility = View.VISIBLE
+            onDeleteClickListener?.let {
+                holder.delete.setOnClickListener {
+                    it(configEntry)
+                }
             }
         }
     }

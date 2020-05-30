@@ -11,6 +11,8 @@ class KeyValueViewModel : ViewModel() {
     lateinit var view: KeyValueView
     lateinit var mainActivityViewModel: MainActivityViewModel
 
+    var readonly = false
+
     private val appConfigDao: AppConfigDao by lazy {
         mainActivityViewModel.appConfigDatabase.appConfigDao()
     }

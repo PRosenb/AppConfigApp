@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
@@ -51,7 +52,10 @@ data class Config(
     val centralConfigId: Long? = null,
     @ColumnInfo(defaultValue = "0")
     val sort: Long = 0
-)
+) {
+    @Ignore
+    val readonly = centralConfigId != null
+}
 
 @Entity(
     tableName = "key_value",

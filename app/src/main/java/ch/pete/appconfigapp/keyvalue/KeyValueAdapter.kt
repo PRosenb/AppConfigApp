@@ -64,6 +64,8 @@ class KeyValueAdapter(
             holder.delete.setOnClickListener {
                 it(keyValue)
             }
+        } ?: run {
+            holder.delete.visibility = View.GONE
         }
     }
 

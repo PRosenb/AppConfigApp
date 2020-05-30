@@ -8,6 +8,7 @@ import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.db.AppConfigDao
 import ch.pete.appconfigapp.model.Config
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class ConfigDetailViewModel(application: Application) : AndroidViewModel(application) {
     lateinit var view: ConfigDetailView
@@ -33,8 +34,10 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
         view.showNameAuthorityFragment(configId)
     }
 
-    fun onEditKeyValueClicked(configId: Long) {
-        view.showKeyValuesFragment(configId)
+    fun onEditKeyValueClicked(config: Config) {
+        config.id?.let {
+            view.showKeyValuesFragment(it, config.readonly)
+        } ?: Timber.e("config.id null")
     }
 
     fun onDetailExecuteClicked(configId: Long) {

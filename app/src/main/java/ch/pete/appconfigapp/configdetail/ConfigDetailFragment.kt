@@ -67,20 +67,41 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView {
     private fun initView(rootView: View, configId: Long) {
         val configLiveDataConfig = viewModel.configById(configId)
         configLiveDataConfig.observe(viewLifecycleOwner, object : Observer<Config> {
-            override fun onChanged(loadedConfig: Config) {
+            override fun onChanged(config: Config) {
                 configLiveDataConfig.removeObserver(this)
-                name.text = loadedConfig.name
-                authority.text = loadedConfig.authority
+                name.text = config.name
+                authority.text = config.authority
 
-                loadedConfig.id?.let { configId ->
-                    editNameAuthority.setOnClickListener {
-                        viewModel.onEditNameAuthorityClicked(configId)
-                    }
-                } ?: Timber.e("loadedConfig.id is null")
+                if (config.readonly) {
+                    editNameAuthority.visibility = View.GONE
+                    editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_view))
+                } else {
+                    config.id?.let { configId ->
+                        editNameAuthority.setOnClickListener {
+                            viewModel.onEditNameAuthorityClicked(configId)
+                        }
+                    } ?: Timber.e("loadedConfig.id is null")
+                    editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_edit))
+                }
+
+                initKeyValues(config)
             }
         })
 
-        val configLiveDataKeyValues = viewModel.keyValueEntriesByConfigId(configId)
+        rootView.execute.setOnClickListener {
+            viewModel.onDetailExecuteClicked(configId)
+        }
+
+        initExecutionResultView(configId, rootView)
+    }
+
+    private fun initKeyValues(config: Config) {
+        if (config.id == null) {
+            Timber.e("config.id null")
+            return
+        }
+
+        val configLiveDataKeyValues = viewModel.keyValueEntriesByConfigId(config.id)
         configLiveDataKeyValues.observe(viewLifecycleOwner, object : Observer<List<KeyValue>> {
             override fun onChanged(keyValues: List<KeyValue>) {
                 configLiveDataKeyValues.removeObserver(this)
@@ -92,16 +113,10 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView {
                     ) ?: ""
 
                 editKeyValue.setOnClickListener {
-                    viewModel.onEditKeyValueClicked(configId)
+                    viewModel.onEditKeyValueClicked(config)
                 }
             }
         })
-
-        rootView.execute.setOnClickListener {
-            viewModel.onDetailExecuteClicked(configId)
-        }
-
-        initExecutionResultView(configId, rootView)
     }
 
     private fun initExecutionResultView(configId: Long, rootView: View) {
@@ -148,12 +163,13 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView {
         fragmentTransaction.commit()
     }
 
-    override fun showKeyValuesFragment(configId: Long) {
+    override fun showKeyValuesFragment(configId: Long, readonly: Boolean) {
         val fragmentTransaction = parentFragmentManager.beginTransaction()
         val fragment = KeyValuesFragment()
 
         fragment.arguments = Bundle().apply {
-            putLong(NameAuthorityFragment.ARG_CONFIG_ID, configId)
+            putLong(KeyValuesFragment.ARG_CONFIG_ID, configId)
+            putBoolean(KeyValuesFragment.ARG_READONLY, readonly)
         }
         fragmentTransaction
             .replace(

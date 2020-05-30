@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.fragment_keyvalue.view.keyValues
 class KeyValuesFragment : Fragment(), KeyValueView {
     companion object {
         const val ARG_CONFIG_ID = "config_id"
+        const val ARG_READONLY = "readonly"
     }
 
     private val viewModel: KeyValueViewModel by viewModels()
@@ -39,9 +40,16 @@ class KeyValuesFragment : Fragment(), KeyValueView {
                 val rootView = inflater.inflate(R.layout.fragment_keyvalue, container, false)
 
                 val configId = args.getLong(ARG_CONFIG_ID)
+                viewModel.readonly = args.getBoolean(ARG_READONLY, false)
+
                 initKeyValuesView(configId, rootView)
-                rootView.addKeyValueButton.setOnClickListener {
-                    viewModel.onAddKeyValueClicked(configId)
+
+                if (viewModel.readonly) {
+                    rootView.addKeyValueButton.visibility = View.GONE
+                } else {
+                    rootView.addKeyValueButton.setOnClickListener {
+                        viewModel.onAddKeyValueClicked(configId)
+                    }
                 }
                 rootView
             } else null
@@ -65,14 +73,22 @@ class KeyValuesFragment : Fragment(), KeyValueView {
     }
 
     private fun initKeyValuesView(configId: Long, rootView: View) {
-        val adapter = KeyValueAdapter(
-            onItemClickListener = {
-                viewModel.onKeyValueEntryClicked(it)
-            },
-            onDeleteClickListener = {
-                viewModel.onKeyValueDeleteClicked(it)
+        val adapter =
+            if (viewModel.readonly) {
+                KeyValueAdapter(
+                    onItemClickListener = null,
+                    onDeleteClickListener = null
+                )
+            } else {
+                KeyValueAdapter(
+                    onItemClickListener = {
+                        viewModel.onKeyValueEntryClicked(it)
+                    },
+                    onDeleteClickListener = {
+                        viewModel.onKeyValueDeleteClicked(it)
+                    }
+                )
             }
-        )
         viewModel.keyValueEntriesByConfigId(configId)
             .observe(viewLifecycleOwner, Observer {
                 adapter.submitList(it)
