@@ -12,6 +12,7 @@ import ch.pete.appconfigapp.model.ConfigEntry
 import ch.pete.appconfigapp.model.ExecutionResult
 import ch.pete.appconfigapp.model.ExternalConfigLocation
 import ch.pete.appconfigapp.model.KeyValue
+import timber.log.Timber
 import java.util.Calendar
 
 @Suppress("TooManyFunctions")
@@ -106,13 +107,9 @@ interface AppConfigDao {
 
         if (config.id != null) {
             deleteKeyValuesByConfigId(config.id)
-            insertKeyValues(
-                keyValues.map {
-                    it.copy(
-                        configId = config.id
-                    )
-                }
-            )
+            insertKeyValues(keyValues)
+        } else {
+            Timber.e("config.id is null")
         }
     }
 

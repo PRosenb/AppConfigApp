@@ -1,9 +1,13 @@
 package ch.pete.appconfigapp.api
 
-import ch.pete.appconfigapp.model.KeyValue
 import retrofit2.http.GET
 import retrofit2.http.Url
 import java.util.Calendar
+
+data class ExternalKeyValue(
+    val key: String,
+    val value: String?
+)
 
 data class ExternalConfig(
     val id: String? = null,
@@ -11,7 +15,7 @@ data class ExternalConfig(
     val authority: String,
     val creationTimestamp: Calendar? = Calendar.getInstance(),
 
-    val keyValues: List<KeyValue> = emptyList()
+    val keyValues: List<ExternalKeyValue> = emptyList()
 )
 
 interface ExternalConfigLocationApi {

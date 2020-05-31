@@ -5,6 +5,7 @@ import ch.pete.appconfigapp.api.ExternalConfigLocationService
 import ch.pete.appconfigapp.db.AppConfigDao
 import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.ExternalConfigLocation
+import ch.pete.appconfigapp.model.KeyValue
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -110,7 +111,10 @@ class ExternalConfigsSyncer(
                 externalConfigId = externalConfig.id,
                 externalConfigLocationId = externalConfigLocationId
             ),
-            keyValues = externalConfig.keyValues
+            keyValues = externalConfig.keyValues.map {
+                // configId is overwritten with the id config gets
+                KeyValue(configId = -1, key = it.key, value = it.value)
+            }
         )
     }
 
@@ -127,10 +131,22 @@ class ExternalConfigsSyncer(
                 authority = externalConfig.authority
             )
         }
-        appConfigDao.updateConfigWithKeyValues(
-            config = config,
-            keyValues = externalConfig.keyValues
-        )
+        if (config.id != null) {
+            appConfigDao.updateConfigWithKeyValues(
+                config = config,
+                keyValues = externalConfig.keyValues.map {
+                    KeyValue(configId = config.id, key = it.key, value = it.value)
+                }
+            )
+        } else {
+            // should not happen
+            Timber.e("config.id is null, insert instead.")
+            appConfigDao.insertConfigWithKeyValues(
+                config = config,
+                keyValues = externalConfig.keyValues.map {
+                    KeyValue(configId = -1, key = it.key, value = it.value)
+                }
+            )
+        }
     }
-
 }

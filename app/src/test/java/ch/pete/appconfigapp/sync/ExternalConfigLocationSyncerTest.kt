@@ -2,6 +2,7 @@ package ch.pete.appconfigapp.sync
 
 import ch.pete.appconfigapp.api.ExternalConfig
 import ch.pete.appconfigapp.api.ExternalConfigLocationService
+import ch.pete.appconfigapp.api.ExternalKeyValue
 import ch.pete.appconfigapp.db.AppConfigDao
 import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.ExternalConfigLocation
@@ -181,8 +182,8 @@ internal class ExternalConfigLocationSyncerTest {
                 name = "name",
                 authority = "authority",
                 keyValues = listOf(
-                    KeyValue(configId = 0, key = "key0", value = "value0"),
-                    KeyValue(configId = 0, key = "key1", value = "value1")
+                    ExternalKeyValue(key = "key0", value = "value0"),
+                    ExternalKeyValue(key = "key1", value = "value1")
                 )
             )
         )
