@@ -116,6 +116,10 @@ interface AppConfigDao {
         }
     }
 
+    /**
+     * Insert creationTimestamp with help of Calendar because sqlite
+     * does not support setting the timezone when using defaults.
+     */
     @Query("INSERT INTO config (name, authority, creationTimestamp) VALUES ('','', :creationTimestamp)")
     suspend fun insertEmptyConfig(creationTimestamp: Calendar): Long
 
