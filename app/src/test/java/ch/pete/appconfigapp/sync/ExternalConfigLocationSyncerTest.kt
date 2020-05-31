@@ -5,6 +5,7 @@ import ch.pete.appconfigapp.api.ExternalConfigLocationService
 import ch.pete.appconfigapp.db.AppConfigDao
 import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.ExternalConfigLocation
+import ch.pete.appconfigapp.model.KeyValue
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.never
@@ -64,12 +65,14 @@ internal class ExternalConfigLocationSyncerTest {
     private val existingConfigsOfExternalConfigLocation0: MutableList<Config> = mutableListOf(
         Config(
             id = 0,
+            externalConfigId = "externalConfigId0",
             externalConfigLocationId = 0,
             name = "LocalConfig 0.0",
             authority = "authority0.0"
         ),
         Config(
             id = 1,
+            externalConfigId = "externalConfigId1",
             externalConfigLocationId = 0,
             name = "LocalConfig 0.1",
             authority = "authority0.1"
@@ -78,12 +81,14 @@ internal class ExternalConfigLocationSyncerTest {
     private val existingConfigsOfExternalConfigLocation1: MutableList<Config> = mutableListOf(
         Config(
             id = 2,
+            externalConfigId = "externalConfigId2",
             externalConfigLocationId = 1,
             name = "LocalConfig 1.0",
             authority = "authority1.0"
         ),
         Config(
             id = 3,
+            externalConfigId = "externalConfigId3",
             externalConfigLocationId = 1,
             name = "LocalConfig 1.1",
             authority = "authority1.1"
@@ -103,20 +108,24 @@ internal class ExternalConfigLocationSyncerTest {
     )
     private val externalConfigs0: MutableList<ExternalConfig> = mutableListOf(
         ExternalConfig(
+            id = "externalConfigId0",
             name = "ApiConfigEntry 0.0",
             authority = "authority0.0"
         ),
         ExternalConfig(
+            id = "externalConfigId1",
             name = "ApiConfigEntry 0.1",
             authority = "authority0.1"
         )
     )
     private val externalConfigs1: MutableList<ExternalConfig> = mutableListOf(
         ExternalConfig(
+            id = "externalConfigId2",
             name = "ApiConfigEntry 1.0",
             authority = "authority1.0"
         ),
         ExternalConfig(
+            id = "externalConfigId3",
             name = "ApiConfigEntry 1.1",
             authority = "authority1.1"
         )
@@ -144,7 +153,7 @@ internal class ExternalConfigLocationSyncerTest {
         // then
         assertThat(count).isEqualTo(4)
         verify(appConfigDao, times(2)).deleteConfigs(eq(emptyList()))
-        verify(appConfigDao, times(4)).insertConfigWithKeyValues(any(), any())
+        verify(appConfigDao, times(4)).insertConfigWithKeyValues(any(), eq(emptyList()))
         verify(appConfigDao, never()).updateConfigWithKeyValues(any(), any())
     }
 
@@ -162,5 +171,33 @@ internal class ExternalConfigLocationSyncerTest {
         verify(appConfigDao).deleteConfigs(eq(listOf(2L, 3)))
         verify(appConfigDao, never()).insertConfigWithKeyValues(any(), any())
         verify(appConfigDao, never()).updateConfigWithKeyValues(any(), any())
+    }
+
+    @Test
+    fun `add entries with keys`() = runBlocking {
+        // given
+        externalConfigs0.add(
+            ExternalConfig(
+                name = "name",
+                authority = "authority",
+                keyValues = listOf(
+                    KeyValue(configId = 0, key = "key0", value = "value0"),
+                    KeyValue(configId = 0, key = "key1", value = "value1")
+                )
+            )
+        )
+        initMocks()
+        // when
+        externalConfigsSyncer.sync()
+        // then
+        verify(appConfigDao, times(1)).insertConfigWithKeyValues(
+            any(),
+            eq(
+                listOf(
+                    KeyValue(configId = 0, key = "key0", value = "value0"),
+                    KeyValue(configId = 0, key = "key1", value = "value1")
+                )
+            )
+        )
     }
 }
