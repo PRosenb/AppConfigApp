@@ -11,12 +11,14 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.Calendar
 
-class CentralConfigSyncer(private val appConfigDao: AppConfigDao) {
-    private val apiService = CentralConfigService()
+class CentralConfigSyncer(
+    private val appConfigDao: AppConfigDao,
+    private val centralConfigService: CentralConfigService = CentralConfigService()
+) {
 
     suspend fun init() {
         withContext(Dispatchers.IO) {
-            apiService.init()
+            centralConfigService.init()
         }
     }
 
@@ -27,10 +29,7 @@ class CentralConfigSyncer(private val appConfigDao: AppConfigDao) {
         withContext(Dispatchers.IO) {
             val centralConfigs = appConfigDao.centralConfigsSuspend()
 
-            val filteredCentralConfigs = centralConfigs
-                .filter { it.enabled }
-
-            filteredCentralConfigs
+            centralConfigs
                 .map {
                     sync(it)
                 }
@@ -44,7 +43,9 @@ class CentralConfigSyncer(private val appConfigDao: AppConfigDao) {
         }
         return try {
             val apiConfigEntries =
-                fetchAndPreprocessCentralConfigEntries(centralConfig)
+                if (centralConfig.enabled) {
+                    fetchAndPreprocessCentralConfigEntries(centralConfig)
+                } else emptyList()
 
             val receivedCentralConfigExternalIds =
                 apiConfigEntries.mapNotNull { it.centralConfigId }.toSet()
@@ -75,7 +76,7 @@ class CentralConfigSyncer(private val appConfigDao: AppConfigDao) {
 
     private suspend fun fetchAndPreprocessCentralConfigEntries(centralConfig: CentralConfig):
             List<ApiConfigEntry> =
-        apiService.fetchConfig(centralConfig.url)
+        centralConfigService.fetchConfig(centralConfig.url)
             .map { unchangedApiConfigEntry ->
                 var apiConfigEntry = unchangedApiConfigEntry
 

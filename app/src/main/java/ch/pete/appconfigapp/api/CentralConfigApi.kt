@@ -6,12 +6,12 @@ import retrofit2.http.Url
 import java.util.Calendar
 
 data class ApiConfigEntry(
-    val centralConfigId: String?,
+    val centralConfigId: String? = null,
     val name: String,
     val authority: String,
-    val creationTimestamp: Calendar?,
+    val creationTimestamp: Calendar? = Calendar.getInstance(),
 
-    val keyValues: List<KeyValue>
+    val keyValues: List<KeyValue> = emptyList()
 )
 
 interface Api {

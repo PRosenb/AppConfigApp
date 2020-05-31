@@ -140,8 +140,13 @@ dependencies {
 
     kapt 'androidx.room:room-compiler:2.2.5'
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+    testImplementation "org.assertj:assertj-core:3.10.0"
+    testImplementation 'org.mockito:mockito-inline:3.2.4'
+    testImplementation 'org.mockito:mockito-junit-jupiter:2.23.0'
+    testImplementation "com.nhaarman:mockito-kotlin:1.6.0"
     testImplementation 'androidx.room:room-testing:2.2.5'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.1.1"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
