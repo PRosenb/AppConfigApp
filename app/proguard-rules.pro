@@ -22,4 +22,11 @@
 
 -keep public class * extends androidx.fragment.app.Fragment
 
+# keep external API model classes
+-keep class ch.pete.appconfigapp.api.model.** { *; }
+
+# required for kotlin-reflect (for jackson-module-kotlin)
+-keep class kotlin.** { *; }
+-keep class org.jetbrains.** { *; }
+
 -dontobfuscate

@@ -1,8 +1,8 @@
 package ch.pete.appconfigapp.sync
 
-import ch.pete.appconfigapp.api.ExternalConfig
 import ch.pete.appconfigapp.api.ExternalConfigLocationService
-import ch.pete.appconfigapp.api.ExternalKeyValue
+import ch.pete.appconfigapp.api.model.ExternalConfig
+import ch.pete.appconfigapp.api.model.ExternalKeyValue
 import ch.pete.appconfigapp.db.AppConfigDao
 import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.ExternalConfigLocation

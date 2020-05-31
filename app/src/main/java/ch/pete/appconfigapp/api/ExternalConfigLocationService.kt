@@ -1,5 +1,6 @@
 package ch.pete.appconfigapp.api
 
+import ch.pete.appconfigapp.api.model.ExternalConfig
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import retrofit2.Retrofit
