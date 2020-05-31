@@ -195,8 +195,8 @@ internal class ExternalConfigLocationSyncerTest {
             any(),
             eq(
                 listOf(
-                    KeyValue(configId = 0, key = "key0", value = "value0"),
-                    KeyValue(configId = 0, key = "key1", value = "value1")
+                    KeyValue(configId = -1, key = "key0", value = "value0"),
+                    KeyValue(configId = -1, key = "key1", value = "value1")
                 )
             )
         )

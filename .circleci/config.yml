@@ -26,6 +26,10 @@ jobs:
             - apk/release/*.apk
             - bundle/release/*
             - mapping/release/mapping.txt
+      - store_test_results:
+          path: app/build/test-results
+      - store_artifacts:
+          path: app/build/reports/lint-results.html
       - store_artifacts:
           path: app/build/outputs/apk/release
       - store_artifacts:
