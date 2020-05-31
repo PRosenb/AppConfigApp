@@ -6,8 +6,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 
 
-class CentralConfigService {
-    private lateinit var api: Api
+class ExternalConfigLocationService {
+    private lateinit var externalConfigLocationApi: ExternalConfigLocationApi
 
     fun init() {
         val mapper =
@@ -20,9 +20,9 @@ class CentralConfigService {
             .addConverterFactory(JacksonConverterFactory.create(mapper))
             .build()
 
-        api = retrofit.create(Api::class.java)
+        externalConfigLocationApi = retrofit.create(ExternalConfigLocationApi::class.java)
     }
 
-    suspend fun fetchConfig(url: String): List<ApiConfigEntry> =
-        api.fetchConfig(url)
+    suspend fun fetchCentalConfigConfig(url: String): List<ExternalConfig> =
+        externalConfigLocationApi.fetchExternalConfigs(url)
 }

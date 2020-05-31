@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3994daddd59c307b65e50396e15bda7e",
+    "identityHash": "f604f7667deed64697d6d9889c8e618e",
     "entities": [
       {
         "tableName": "config",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `authority` TEXT NOT NULL, `creationTimestamp` TEXT NOT NULL, `centralConfigExternalId` TEXT, `centralConfigId` INTEGER, `sort` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`centralConfigId`) REFERENCES `central_config`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `authority` TEXT NOT NULL, `creationTimestamp` TEXT NOT NULL, `externalConfigId` TEXT, `externalConfigLocationId` INTEGER, `sort` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`externalConfigLocationId`) REFERENCES `external_config_location`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -33,14 +33,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "centralConfigExternalId",
-            "columnName": "centralConfigExternalId",
+            "fieldPath": "externalConfigId",
+            "columnName": "externalConfigId",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "centralConfigId",
-            "columnName": "centralConfigId",
+            "fieldPath": "externalConfigLocationId",
+            "columnName": "externalConfigLocationId",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -60,21 +60,21 @@
         },
         "indices": [
           {
-            "name": "index_config_centralConfigId",
+            "name": "index_config_externalConfigLocationId",
             "unique": false,
             "columnNames": [
-              "centralConfigId"
+              "externalConfigLocationId"
             ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_config_centralConfigId` ON `${TABLE_NAME}` (`centralConfigId`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_config_externalConfigLocationId` ON `${TABLE_NAME}` (`externalConfigLocationId`)"
           }
         ],
         "foreignKeys": [
           {
-            "table": "central_config",
+            "table": "external_config_location",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "centralConfigId"
+              "externalConfigLocationId"
             ],
             "referencedColumns": [
               "id"
@@ -213,7 +213,7 @@
         ]
       },
       {
-        "tableName": "central_config",
+        "tableName": "external_config_location",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `url` TEXT NOT NULL, `enabled` INTEGER NOT NULL DEFAULT 1)",
         "fields": [
           {
@@ -255,7 +255,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3994daddd59c307b65e50396e15bda7e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f604f7667deed64697d6d9889c8e618e')"
     ]
   }
 }

@@ -24,8 +24,8 @@
     <string name="value">Value</string>
     <string name="null_checkbox">Null</string>
     <string name="error_occurred">An error occurred, please try again.</string>
-    <string name="central_config">Central Config</string>
+    <string name="external_config_locations">External Config Locations</string>
     <string name="url_">URL:</string>
-    <string name="sync_central_config">Sync Central Config</string>
-    <string name="no_central_config">No config synced, please add a URL.</string>
+    <string name="sync_external_config_locations">Sync External Config Locations</string>
+    <string name="no_external_config_location">No config synced, please add a URL.</string>
 </resources>

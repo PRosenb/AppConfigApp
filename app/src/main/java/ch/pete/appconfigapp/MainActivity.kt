@@ -7,7 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import ch.pete.appconfigapp.centralconfig.CentralConfigFragment
+import ch.pete.appconfigapp.externalconfiglocation.ExternalConfigLocationFragment
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 
@@ -42,14 +42,14 @@ class MainActivity :
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val canGoBack = supportFragmentManager.backStackEntryCount > 0
         // only visible on main screen
-        menu?.findItem(R.id.centralConfig)?.isVisible = !canGoBack
+        menu?.findItem(R.id.externalConfigLocation)?.isVisible = !canGoBack
         return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.centralConfig -> {
-                viewModel.onMenuCentralConfig()
+            R.id.externalConfigLocation -> {
+                viewModel.onMenuExternalConfigLocation()
                 true
             }
             R.id.sync -> {
@@ -77,9 +77,9 @@ class MainActivity :
         supportActionBar?.setDisplayHomeAsUpEnabled(canGoBack)
     }
 
-    override fun showCentralConfig() {
+    override fun showExternalConfigLocation() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        val fragment = CentralConfigFragment()
+        val fragment = ExternalConfigLocationFragment()
         fragmentTransaction
             .replace(
                 R.id.fragmentContainer,

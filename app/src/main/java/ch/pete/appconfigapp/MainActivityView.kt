@@ -1,6 +1,6 @@
 package ch.pete.appconfigapp
 
 interface MainActivityView {
-    fun showCentralConfig()
+    fun showExternalConfigLocation()
     fun showSnackbar(message: String)
 }

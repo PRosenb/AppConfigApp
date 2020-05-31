@@ -5,8 +5,8 @@ import retrofit2.http.GET
 import retrofit2.http.Url
 import java.util.Calendar
 
-data class ApiConfigEntry(
-    val centralConfigId: String? = null,
+data class ExternalConfig(
+    val id: String? = null,
     val name: String,
     val authority: String,
     val creationTimestamp: Calendar? = Calendar.getInstance(),
@@ -14,7 +14,7 @@ data class ApiConfigEntry(
     val keyValues: List<KeyValue> = emptyList()
 )
 
-interface Api {
+interface ExternalConfigLocationApi {
     @GET
-    suspend fun fetchConfig(@Url url: String): List<ApiConfigEntry>
+    suspend fun fetchExternalConfigs(@Url url: String): List<ExternalConfig>
 }

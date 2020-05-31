@@ -1,4 +1,4 @@
-package ch.pete.appconfigapp.centralconfig
+package ch.pete.appconfigapp.externalconfiglocation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,17 +12,17 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
-import ch.pete.appconfigapp.centralConfigdetails.CentralConfigDetailFragment
-import kotlinx.android.synthetic.main.fragment_central_config.view.addCentralConfigButton
-import kotlinx.android.synthetic.main.fragment_central_config.view.recyclerView
+import ch.pete.appconfigapp.externalconfiglocationdetails.ExternalConfigLocationDetailFragment
+import kotlinx.android.synthetic.main.fragment_external_config_location.view.addExternalConfigLocationButton
+import kotlinx.android.synthetic.main.fragment_external_config_location.view.recyclerView
 
-class CentralConfigFragment : Fragment(), CentralConfigView {
+class ExternalConfigLocationFragment : Fragment(), ExternalConfigLocationView {
     companion object {
         const val ARG_CONFIG_ENTRY_ID = "ARG_CONFIG_ENTRY_ID"
         const val ARG_NEW = "ARG_NEW"
     }
 
-    private val viewModel: CentralConfigViewModel by viewModels()
+    private val viewModel: ExternalConfigLocationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,8 @@ class CentralConfigFragment : Fragment(), CentralConfigView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_central_config, container, false)
+        val rootView =
+            inflater.inflate(R.layout.fragment_external_config_location, container, false)
 
         initView(rootView)
         return rootView
@@ -48,17 +49,17 @@ class CentralConfigFragment : Fragment(), CentralConfigView {
     }
 
     private fun initView(rootView: View) {
-        val centralConfigAdapter = CentralConfigAdapter(
+        val externalConfigLocationAdapter = ExternalConfigLocationAdapter(
             onItemClickListener = {
-                viewModel.onCentralConfigEntryClicked(it)
+                viewModel.onExternalConfigLocationEntryClicked(it)
             },
             onDeleteClickListener = {
-                viewModel.deleteCentralConfig(it)
+                viewModel.deleteExternalConfigLocation(it)
             }
         )
-        viewModel.centralConfigs()
+        viewModel.externalConfigLocations()
             .observe(viewLifecycleOwner, Observer {
-                centralConfigAdapter.submitList(it)
+                externalConfigLocationAdapter.submitList(it)
             })
         rootView.recyclerView.apply {
             setHasFixedSize(true)
@@ -68,19 +69,22 @@ class CentralConfigFragment : Fragment(), CentralConfigView {
                 DividerItemDecoration.VERTICAL
             )
             addItemDecoration(dividerItemDecoration)
-            this.adapter = centralConfigAdapter
+            this.adapter = externalConfigLocationAdapter
         }
-        rootView.addCentralConfigButton.setOnClickListener {
-            viewModel.onAddCentralConfigClicked()
+        rootView.addExternalConfigLocationButton.setOnClickListener {
+            viewModel.onAddExternalConfigLocationClicked()
         }
     }
 
-    override fun showCentralConfigDetailFragment(centralConfigId: Long) {
+    override fun showExternalConfigLocationDetailFragment(externalConfigLocationId: Long) {
         val fragmentTransaction = parentFragmentManager.beginTransaction()
-        val fragment = CentralConfigDetailFragment()
+        val fragment = ExternalConfigLocationDetailFragment()
 
         fragment.arguments = Bundle().apply {
-            putLong(CentralConfigDetailFragment.ARG_CENTRAL_CONFIG_ID, centralConfigId)
+            putLong(
+                ExternalConfigLocationDetailFragment.ARG_EXTERNAL_CONFIG_LOCATION_ID,
+                externalConfigLocationId
+            )
         }
         fragmentTransaction
             .replace(

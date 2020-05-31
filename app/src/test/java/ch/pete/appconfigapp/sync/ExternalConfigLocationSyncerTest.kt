@@ -1,10 +1,10 @@
 package ch.pete.appconfigapp.sync
 
-import ch.pete.appconfigapp.api.ApiConfigEntry
-import ch.pete.appconfigapp.api.CentralConfigService
+import ch.pete.appconfigapp.api.ExternalConfig
+import ch.pete.appconfigapp.api.ExternalConfigLocationService
 import ch.pete.appconfigapp.db.AppConfigDao
-import ch.pete.appconfigapp.model.CentralConfig
 import ch.pete.appconfigapp.model.Config
+import ch.pete.appconfigapp.model.ExternalConfigLocation
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.never
@@ -25,7 +25,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-internal class CentralConfigSyncerTest {
+internal class ExternalConfigLocationSyncerTest {
     @kotlinx.coroutines.ObsoleteCoroutinesApi
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
@@ -34,7 +34,7 @@ internal class CentralConfigSyncerTest {
     @BeforeEach
     fun setUp() {
         Dispatchers.setMain(mainThreadSurrogate)
-        centralConfigSyncer = CentralConfigSyncer(appConfigDao, centralConfigService)
+        externalConfigsSyncer = ExternalConfigsSyncer(appConfigDao, externalConfigService)
     }
 
     @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -49,98 +49,98 @@ internal class CentralConfigSyncerTest {
     private lateinit var appConfigDao: AppConfigDao
 
     @Mock
-    private lateinit var centralConfigService: CentralConfigService
+    private lateinit var externalConfigService: ExternalConfigLocationService
 
     private suspend fun initMocks() {
-        whenever(appConfigDao.fetchConfigByCentralConfigId(0))
-            .thenReturn(existingConfigsOfCentralConfig0)
-        whenever(appConfigDao.fetchConfigByCentralConfigId(1))
-            .thenReturn(existingConfigsOfCentralConfig1)
-        whenever(appConfigDao.centralConfigsSuspend()).thenReturn(centralConfigs)
-        whenever(centralConfigService.fetchConfig("url0")).thenReturn(apiConfigs0)
-        whenever(centralConfigService.fetchConfig("url1")).thenReturn(apiConfigs1)
+        whenever(appConfigDao.fetchConfigByExternalConfigLocationId(0))
+            .thenReturn(existingConfigsOfExternalConfigLocation0)
+        whenever(appConfigDao.fetchConfigByExternalConfigLocationId(1))
+            .thenReturn(existingConfigsOfExternalConfigLocation1)
+        whenever(appConfigDao.externalConfigLocationsSuspend()).thenReturn(externalConfigLocations)
+        whenever(externalConfigService.fetchCentalConfigConfig("url0")).thenReturn(externalConfigs0)
+        whenever(externalConfigService.fetchCentalConfigConfig("url1")).thenReturn(externalConfigs1)
     }
 
-    private val existingConfigsOfCentralConfig0: MutableList<Config> = mutableListOf(
+    private val existingConfigsOfExternalConfigLocation0: MutableList<Config> = mutableListOf(
         Config(
             id = 0,
-            centralConfigId = 0,
+            externalConfigLocationId = 0,
             name = "LocalConfig 0.0",
             authority = "authority0.0"
         ),
         Config(
             id = 1,
-            centralConfigId = 0,
+            externalConfigLocationId = 0,
             name = "LocalConfig 0.1",
             authority = "authority0.1"
         )
     )
-    private val existingConfigsOfCentralConfig1: MutableList<Config> = mutableListOf(
+    private val existingConfigsOfExternalConfigLocation1: MutableList<Config> = mutableListOf(
         Config(
             id = 2,
-            centralConfigId = 1,
+            externalConfigLocationId = 1,
             name = "LocalConfig 1.0",
             authority = "authority1.0"
         ),
         Config(
             id = 3,
-            centralConfigId = 1,
+            externalConfigLocationId = 1,
             name = "LocalConfig 1.1",
             authority = "authority1.1"
         )
     )
-    private val centralConfigs: MutableList<CentralConfig> = mutableListOf(
-        CentralConfig(
+    private val externalConfigLocations: MutableList<ExternalConfigLocation> = mutableListOf(
+        ExternalConfigLocation(
             id = 0,
-            name = "CentralConfig 0",
+            name = "ExternalConfigLocation 0",
             url = "url0"
         ),
-        CentralConfig(
+        ExternalConfigLocation(
             id = 1,
-            name = "CentralConfig 1",
+            name = "ExternalConfigLocation 1",
             url = "url1"
         )
     )
-    private val apiConfigs0: MutableList<ApiConfigEntry> = mutableListOf(
-        ApiConfigEntry(
+    private val externalConfigs0: MutableList<ExternalConfig> = mutableListOf(
+        ExternalConfig(
             name = "ApiConfigEntry 0.0",
             authority = "authority0.0"
         ),
-        ApiConfigEntry(
+        ExternalConfig(
             name = "ApiConfigEntry 0.1",
             authority = "authority0.1"
         )
     )
-    private val apiConfigs1: MutableList<ApiConfigEntry> = mutableListOf(
-        ApiConfigEntry(
+    private val externalConfigs1: MutableList<ExternalConfig> = mutableListOf(
+        ExternalConfig(
             name = "ApiConfigEntry 1.0",
             authority = "authority1.0"
         ),
-        ApiConfigEntry(
+        ExternalConfig(
             name = "ApiConfigEntry 1.1",
             authority = "authority1.1"
         )
     )
 
-    private lateinit var centralConfigSyncer: CentralConfigSyncer
+    private lateinit var externalConfigsSyncer: ExternalConfigsSyncer
 
     @Test
     fun init() = runBlocking {
         // given
         // when
-        centralConfigSyncer.init()
+        externalConfigsSyncer.init()
         // then
-        verify(centralConfigService).init()
+        verify(externalConfigService).init()
     }
 
     @Test
     fun `add 2 new entries each`() = runBlocking {
         // given
-        existingConfigsOfCentralConfig0.clear()
-        existingConfigsOfCentralConfig1.clear()
+        existingConfigsOfExternalConfigLocation0.clear()
+        existingConfigsOfExternalConfigLocation1.clear()
         initMocks()
         // when
-        val count = centralConfigSyncer.sync()
+        val count = externalConfigsSyncer.sync()
         // then
         assertThat(count).isEqualTo(4)
         verify(appConfigDao, times(2)).deleteConfigs(eq(emptyList()))
@@ -151,11 +151,11 @@ internal class CentralConfigSyncerTest {
     @Test
     fun `delete all existing`() = runBlocking {
         // given
-        apiConfigs0.clear()
-        apiConfigs1.clear()
+        externalConfigs0.clear()
+        externalConfigs1.clear()
         initMocks()
         // when
-        val count = centralConfigSyncer.sync()
+        val count = externalConfigsSyncer.sync()
         // then
         assertThat(count).isEqualTo(0)
         verify(appConfigDao).deleteConfigs(eq(listOf(0L, 1)))

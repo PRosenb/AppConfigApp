@@ -10,7 +10,7 @@ import ch.pete.appconfigapp.db.DatabaseBuilder
 import ch.pete.appconfigapp.model.ConfigEntry
 import ch.pete.appconfigapp.model.ExecutionResult
 import ch.pete.appconfigapp.model.ResultType
-import ch.pete.appconfigapp.sync.CentralConfigSyncer
+import ch.pete.appconfigapp.sync.ExternalConfigsSyncer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,25 +21,25 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     val appConfigDatabase = DatabaseBuilder.builder(application).build()
     private val appConfigDao = appConfigDatabase.appConfigDao()
-    val centralConfigSyncer = CentralConfigSyncer(appConfigDao)
+    val externalConfigsSyncer = ExternalConfigsSyncer(appConfigDao)
 
     fun init() {
         viewModelScope.launch {
-            centralConfigSyncer.init()
-            centralConfigSyncer.sync()
+            externalConfigsSyncer.init()
+            externalConfigsSyncer.sync()
         }
     }
 
-    fun onMenuCentralConfig() {
-        view.showCentralConfig()
+    fun onMenuExternalConfigLocation() {
+        view.showExternalConfigLocation()
     }
 
     fun onMenuSync() {
         viewModelScope.launch {
-            val syncedItemsCount = centralConfigSyncer.sync()
+            val syncedItemsCount = externalConfigsSyncer.sync()
             if (syncedItemsCount == 0) {
                 view.showSnackbar(
-                    getApplication<Application>().getString(R.string.no_central_config)
+                    getApplication<Application>().getString(R.string.no_external_config_location)
                 )
             }
         }

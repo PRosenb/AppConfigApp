@@ -7,10 +7,10 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import ch.pete.appconfigapp.model.CentralConfig
 import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.ConfigEntry
 import ch.pete.appconfigapp.model.ExecutionResult
+import ch.pete.appconfigapp.model.ExternalConfigLocation
 import ch.pete.appconfigapp.model.KeyValue
 import java.util.Calendar
 
@@ -32,8 +32,8 @@ interface AppConfigDao {
     @Query("SELECT * FROM config WHERE config.id = :configId")
     fun fetchConfigById(configId: Long): LiveData<Config>
 
-    @Query("SELECT * FROM config WHERE centralConfigId = :centralConfigId")
-    suspend fun fetchConfigByCentralConfigId(centralConfigId: Long): List<Config>
+    @Query("SELECT * FROM config WHERE externalConfigLocationId = :externalConfigLocationId")
+    suspend fun fetchConfigByExternalConfigLocationId(externalConfigLocationId: Long): List<Config>
 
     @Transaction
     @Query("SELECT * FROM execution_result WHERE configId = :configId ORDER BY timestamp DESC")
@@ -45,14 +45,14 @@ interface AppConfigDao {
     @Query("SELECT * FROM key_value WHERE id = :keyValueId")
     fun keyValueEntryByKeyValueId(keyValueId: Long): LiveData<KeyValue>
 
-    @Query("SELECT * FROM central_config")
-    fun centralConfigs(): LiveData<List<CentralConfig>>
+    @Query("SELECT * FROM external_config_location")
+    fun externalConfigLocations(): LiveData<List<ExternalConfigLocation>>
 
-    @Query("SELECT * FROM central_config")
-    suspend fun centralConfigsSuspend(): List<CentralConfig>
+    @Query("SELECT * FROM external_config_location")
+    suspend fun externalConfigLocationsSuspend(): List<ExternalConfigLocation>
 
-    @Query("SELECT * FROM central_config where id = :id")
-    fun centralConfigById(id: Long): LiveData<CentralConfig>
+    @Query("SELECT * FROM external_config_location where id = :id")
+    fun externalConfigLocationById(id: Long): LiveData<ExternalConfigLocation>
 
     @Transaction
     suspend fun deleteConfigEntry(configEntry: ConfigEntry) {
@@ -62,15 +62,15 @@ interface AppConfigDao {
     }
 
     @Transaction
-    suspend fun cloneConfigEntryWithoutResultsAndCentralConfig(
+    suspend fun cloneConfigEntryWithoutResultsAndExternalConfigLocation(
         configEntry: ConfigEntry,
         newName: String
     ) {
         val configId = insertConfig(
             configEntry.config.copy(
                 id = null,
-                centralConfigExternalId = null,
-                centralConfigId = null,
+                externalConfigId = null,
+                externalConfigLocationId = null,
                 name = newName
             )
         )
@@ -131,8 +131,8 @@ interface AppConfigDao {
     @Insert
     suspend fun insertExecutionResult(executionResult: ExecutionResult): Long
 
-    @Query("INSERT INTO central_config (name, url) VALUES ('','')")
-    suspend fun insertCentralConfig(): Long
+    @Query("INSERT INTO external_config_location (name, url) VALUES ('','')")
+    suspend fun insertExternalConfigLocation(): Long
 
     @Update
     suspend fun updateConfig(config: Config): Int
@@ -146,11 +146,11 @@ interface AppConfigDao {
     @Update
     suspend fun updateExecutionResult(executionResults: List<ExecutionResult>): Int
 
-    @Query("UPDATE central_config SET name = :name, url = :url WHERE id = :id")
-    suspend fun updateCentralConfig(name: String, url: String, id: Long)
+    @Query("UPDATE external_config_location SET name = :name, url = :url WHERE id = :id")
+    suspend fun updateExternalConfigLocation(name: String, url: String, id: Long)
 
-    @Query("DELETE FROM config WHERE centralConfigId NOT NULL")
-    suspend fun deleteAllCentralConfigs()
+    @Query("DELETE FROM config WHERE externalConfigLocationId NOT NULL")
+    suspend fun deleteAllExternalConfigLocations()
 
     @Delete
     suspend fun deleteConfig(config: Config): Int
@@ -168,7 +168,7 @@ interface AppConfigDao {
     suspend fun deleteExecutionResults(executionResults: List<ExecutionResult>): Int
 
     @Delete
-    suspend fun deleteCentralConfig(centralConfig: CentralConfig)
+    suspend fun deleteExternalConfigLocation(externalConfigLocation: ExternalConfigLocation)
 
     @Query("DELETE FROM config WHERE id IN (:ids)")
     suspend fun deleteConfigs(ids: List<Long>)

@@ -31,14 +31,14 @@ data class ConfigEntry(
 @Entity(
     tableName = "config", foreignKeys = [
         ForeignKey(
-            entity = CentralConfig::class,
+            entity = ExternalConfigLocation::class,
             parentColumns = ["id"],
-            childColumns = ["centralConfigId"],
+            childColumns = ["externalConfigLocationId"],
             onDelete = CASCADE
         )
     ],
     indices = [
-        Index(value = ["centralConfigId"])
+        Index(value = ["externalConfigLocationId"])
     ]
 )
 data class Config(
@@ -48,13 +48,13 @@ data class Config(
     val name: String,
     val authority: String,
     val creationTimestamp: Calendar = Calendar.getInstance(),
-    val centralConfigExternalId: String? = null,
-    val centralConfigId: Long? = null,
+    val externalConfigId: String? = null,
+    val externalConfigLocationId: Long? = null,
     @ColumnInfo(defaultValue = "0")
     val sort: Long = 0
 ) {
     @Ignore
-    val readonly = centralConfigId != null
+    val readonly = externalConfigLocationId != null
 }
 
 @Entity(
@@ -107,19 +107,8 @@ enum class ResultType(val id: Int) {
     SUCCESS(0), ACCESS_DENIED(1), EXCEPTION(2)
 }
 
-data class CentralConfigWithConfig(
-    @Embedded
-    val centralConfig: CentralConfig,
-
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "centralConfigId"
-    )
-    val configs: List<Config> = emptyList()
-)
-
-@Entity(tableName = "central_config")
-data class CentralConfig(
+@Entity(tableName = "external_config_location")
+data class ExternalConfigLocation(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
     val name: String,
