@@ -43,6 +43,7 @@ class MainActivity :
         val canGoBack = supportFragmentManager.backStackEntryCount > 0
         // only visible on main screen
         menu?.findItem(R.id.externalConfigLocation)?.isVisible = !canGoBack
+        menu?.findItem(R.id.sync)?.isVisible = !canGoBack
         return super.onPrepareOptionsMenu(menu)
     }
 
