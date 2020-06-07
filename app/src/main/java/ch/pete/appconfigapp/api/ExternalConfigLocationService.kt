@@ -3,6 +3,7 @@ package ch.pete.appconfigapp.api
 import ch.pete.appconfigapp.api.model.ExternalConfig
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 
@@ -13,7 +14,7 @@ class ExternalConfigLocationService {
     fun init() {
         val mapper =
             ObjectMapper(YAMLFactory())
-                .findAndRegisterModules()
+                .registerModule(KotlinModule())
 
         val retrofit = Retrofit.Builder()
             // baseUrl must be set and end with /
