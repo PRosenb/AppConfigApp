@@ -9,6 +9,7 @@ import ch.pete.appconfigapp.model.KeyValue
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import timber.log.Timber
 import java.util.Calendar
 
@@ -70,6 +71,10 @@ class ExternalConfigsSyncer(
             }
             apiConfigEntries.size
         } catch (e: MismatchedInputException) {
+            Timber.e("Could not fetch external config location $externalConfigLocation", e)
+            e.printStackTrace()
+            0
+        } catch (e: HttpException) {
             Timber.e("Could not fetch external config location $externalConfigLocation", e)
             e.printStackTrace()
             0
