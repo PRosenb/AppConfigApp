@@ -28,6 +28,10 @@
     <string name="url_">URL:</string>
     <string name="sync_external_config_locations">Sync External Config Locations</string>
     <string name="no_external_config_location">No config synced, please add a URL.</string>
+    <string name="name_authority_explanation">The name can be any text you like but type the authority
+        exactly as it is defined in the AndroidManifest.xml file of the app under test.\n
+        \n
+    See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
     <string name="config_list_empty">This app only works with an app under test that
         includes the <a href="https://github.com/PRosenb/AppConfig">library AppConfig</a>.\n
         \n

@@ -1,6 +1,7 @@
 package ch.pete.appconfigapp.nameauthority
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import ch.pete.appconfigapp.model.Config
 import kotlinx.android.synthetic.main.fragment_name_authority.authority
 import kotlinx.android.synthetic.main.fragment_name_authority.name
 import kotlinx.android.synthetic.main.fragment_name_authority.view.authority
+import kotlinx.android.synthetic.main.fragment_name_authority.view.explanation
 import kotlinx.android.synthetic.main.fragment_name_authority.view.name
 import timber.log.Timber
 
@@ -39,6 +41,7 @@ class NameAuthorityFragment : Fragment() {
             val rootView = if (args.containsKey(ARG_CONFIG_ID)) {
                 val configId = args.getLong(ARG_CONFIG_ID)
                 val rootView = inflater.inflate(R.layout.fragment_name_authority, container, false)
+                rootView.explanation.movementMethod = LinkMovementMethod.getInstance()
 
                 loadData(configId, rootView)
                 rootView
