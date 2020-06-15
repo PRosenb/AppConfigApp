@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/sync"
-        android:icon="@android:drawable/ic_popup_sync"
+        android:icon="@drawable/ic_sync"
         android:title="@string/sync_external_config_locations"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/externalConfigLocation"
-        android:icon="@android:drawable/ic_menu_manage"
+        android:icon="@drawable/ic_settings"
         android:title="@string/external_config_locations"
         app:showAsAction="ifRoom" />
 </menu>
