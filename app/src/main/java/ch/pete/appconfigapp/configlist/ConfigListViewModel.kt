@@ -3,6 +3,7 @@ package ch.pete.appconfigapp.configlist
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
@@ -24,6 +25,16 @@ class ConfigListViewModel(application: Application) : AndroidViewModel(applicati
     }
     val configEntries: LiveData<List<ConfigEntry>> by lazy {
         appConfigDao.fetchConfigEntries()
+    }
+
+    fun init() {
+        configEntries.observe(view, Observer {
+            if (it.isEmpty()) {
+                view.showEmptyView()
+            } else {
+                view.hideEmptyView()
+            }
+        })
     }
 
     fun onAddConfigClicked() {

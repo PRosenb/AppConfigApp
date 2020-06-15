@@ -28,4 +28,9 @@
     <string name="url_">URL:</string>
     <string name="sync_external_config_locations">Sync External Config Locations</string>
     <string name="no_external_config_location">No config synced, please add a URL.</string>
+    <string name="config_list_empty">This app only works with an app under test that
+        includes the <a href="https://github.com/PRosenb/AppConfig">library AppConfig</a>.\n
+        \n
+        It allows you to reconfigure your app by setting SharedPreferences in it so that you
+        can e.g. point it to a staging or dev environment.</string>
 </resources>

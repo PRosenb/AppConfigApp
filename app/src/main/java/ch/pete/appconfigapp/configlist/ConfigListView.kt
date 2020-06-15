@@ -1,6 +1,10 @@
 package ch.pete.appconfigapp.configlist
 
-interface ConfigListView {
+import androidx.lifecycle.LifecycleOwner
+
+interface ConfigListView : LifecycleOwner {
+    fun showEmptyView()
+    fun hideEmptyView()
     fun showDetailsOfNewItem(configId: Long)
     fun showDetails(configId: Long)
 }

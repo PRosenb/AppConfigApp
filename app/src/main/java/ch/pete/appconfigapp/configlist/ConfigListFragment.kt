@@ -1,6 +1,7 @@
 package ch.pete.appconfigapp.configlist
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
 import ch.pete.appconfigapp.configdetail.ConfigDetailFragment
+import kotlinx.android.synthetic.main.fragment_config_list.empty
 import kotlinx.android.synthetic.main.fragment_config_list.view.addConfigButton
+import kotlinx.android.synthetic.main.fragment_config_list.view.emptyText
 import kotlinx.android.synthetic.main.fragment_config_list.view.recyclerView
 
 @Suppress("unused")
@@ -25,6 +28,7 @@ class ConfigListFragment : Fragment(), ConfigListView {
         viewModel.view = this
         viewModel.mainActivityViewModel =
             ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
+        viewModel.init()
     }
 
     override fun onCreateView(
@@ -65,8 +69,17 @@ class ConfigListFragment : Fragment(), ConfigListView {
         rootView.addConfigButton.setOnClickListener {
             viewModel.onAddConfigClicked()
         }
+        rootView.emptyText.movementMethod = LinkMovementMethod.getInstance()
 
         return rootView
+    }
+
+    override fun showEmptyView() {
+        empty.visibility = View.VISIBLE
+    }
+
+    override fun hideEmptyView() {
+        empty.visibility = View.GONE
     }
 
     override fun showDetailsOfNewItem(configId: Long) {
