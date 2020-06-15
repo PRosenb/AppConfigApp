@@ -1,6 +1,7 @@
 package ch.pete.appconfigapp.externalconfiglocationdetails
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import ch.pete.appconfigapp.R
 import ch.pete.appconfigapp.model.ExternalConfigLocation
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.name
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.url
+import kotlinx.android.synthetic.main.fragment_external_config_location_detail.view.explanation
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.view.name
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.view.url
 import timber.log.Timber
@@ -44,6 +46,7 @@ class ExternalConfigLocationDetailFragment : Fragment() {
                         container,
                         false
                     )
+                rootView.explanation.movementMethod = LinkMovementMethod.getInstance()
 
                 loadData(externalConfigLocationId, rootView)
                 rootView

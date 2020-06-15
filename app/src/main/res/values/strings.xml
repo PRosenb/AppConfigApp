@@ -44,4 +44,8 @@
     to fetch config entries from. It is a yaml file is available on a public URL.\n
         \n
     See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
+    <string name="external_config_location_detail_explanation">Please specify any name you like and
+        type the URL where the .yaml file of the configuration is located.\n
+        \n
+    See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
 </resources>
