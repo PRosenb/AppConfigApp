@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
+import ch.pete.appconfigapp.TitleFragment
 import ch.pete.appconfigapp.model.Config
 import kotlinx.android.synthetic.main.fragment_name_authority.authority
 import kotlinx.android.synthetic.main.fragment_name_authority.name
@@ -19,12 +20,13 @@ import kotlinx.android.synthetic.main.fragment_name_authority.view.explanation
 import kotlinx.android.synthetic.main.fragment_name_authority.view.name
 import timber.log.Timber
 
-class NameAuthorityFragment : Fragment() {
+class NameAuthorityFragment : Fragment(), TitleFragment {
     companion object {
         const val ARG_CONFIG_ID = "config_id"
     }
 
     private val viewModel: NameAuthorityViewModel by viewModels()
+    override val title: String by lazy { getString(R.string.details) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

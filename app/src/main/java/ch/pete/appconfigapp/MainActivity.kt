@@ -64,6 +64,11 @@ class MainActivity :
     override fun onBackStackChanged() {
         invalidateOptionsMenu()
         shouldDisplayHomeUp()
+        val titleFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? TitleFragment
+        titleFragment?.title?.let {
+            supportActionBar?.title = it
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

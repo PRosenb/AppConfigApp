@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
+import ch.pete.appconfigapp.TitleFragment
 import ch.pete.appconfigapp.configdetail.ConfigDetailFragment
 import kotlinx.android.synthetic.main.fragment_config_list.empty
 import kotlinx.android.synthetic.main.fragment_config_list.view.addConfigButton
@@ -20,8 +21,9 @@ import kotlinx.android.synthetic.main.fragment_config_list.view.emptyText
 import kotlinx.android.synthetic.main.fragment_config_list.view.recyclerView
 
 @Suppress("unused")
-class ConfigListFragment : Fragment(), ConfigListView {
+class ConfigListFragment : Fragment(), ConfigListView, TitleFragment {
     private val viewModel: ConfigListViewModel by activityViewModels()
+    override val title: String by lazy { getString(R.string.app_name) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

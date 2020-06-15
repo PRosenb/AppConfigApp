@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
+import ch.pete.appconfigapp.TitleFragment
 import ch.pete.appconfigapp.keyvalue.KeyValuesFragment
 import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.KeyValue
@@ -26,13 +27,14 @@ import kotlinx.android.synthetic.main.fragment_config_detail.view.execute
 import kotlinx.android.synthetic.main.fragment_config_detail.view.executionResults
 import timber.log.Timber
 
-class ConfigDetailFragment : Fragment(), ConfigDetailView {
+class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
     companion object {
         const val ARG_CONFIG_ENTRY_ID = "ARG_CONFIG_ENTRY_ID"
         const val ARG_NEW = "ARG_NEW"
     }
 
     private val viewModel: ConfigDetailViewModel by viewModels()
+    override val title: String by lazy { getString(R.string.config_details) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

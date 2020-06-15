@@ -13,14 +13,16 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
+import ch.pete.appconfigapp.TitleFragment
 import ch.pete.appconfigapp.externalconfiglocationdetails.ExternalConfigLocationDetailFragment
 import kotlinx.android.synthetic.main.fragment_external_config_location.empty
 import kotlinx.android.synthetic.main.fragment_external_config_location.view.addExternalConfigLocationButton
 import kotlinx.android.synthetic.main.fragment_external_config_location.view.emptyText
 import kotlinx.android.synthetic.main.fragment_external_config_location.view.recyclerView
 
-class ExternalConfigLocationFragment : Fragment(), ExternalConfigLocationView {
+class ExternalConfigLocationFragment : Fragment(), ExternalConfigLocationView, TitleFragment {
     private val viewModel: ExternalConfigLocationViewModel by viewModels()
+    override val title: String by lazy { getString(R.string.external_config_location) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

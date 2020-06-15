@@ -28,6 +28,11 @@
     <string name="url_">URL:</string>
     <string name="sync_external_config_locations">Sync External Config Locations</string>
     <string name="no_external_config_location">No config synced, please add an URL.</string>
+    <string name="details">Details</string>
+    <string name="config_details">Config Details</string>
+    <string name="key_values">Key/Values</string>
+    <string name="external_config_location">External Config</string>
+    <string name="external_config_location_details">External Config Details</string>
     <string name="name_authority_explanation">The name can be any text you like but type the authority
         exactly as it is defined in the AndroidManifest.xml file of the app under test.\n
         \n

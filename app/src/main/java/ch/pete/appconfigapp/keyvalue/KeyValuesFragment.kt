@@ -13,18 +13,20 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
+import ch.pete.appconfigapp.TitleFragment
 import kotlinx.android.synthetic.main.fragment_keyvalue.empty
 import kotlinx.android.synthetic.main.fragment_keyvalue.view.addKeyValueButton
 import kotlinx.android.synthetic.main.fragment_keyvalue.view.emptyText
 import kotlinx.android.synthetic.main.fragment_keyvalue.view.keyValues
 
-class KeyValuesFragment : Fragment(), KeyValueView {
+class KeyValuesFragment : Fragment(), KeyValueView, TitleFragment {
     companion object {
         const val ARG_CONFIG_ID = "config_id"
         const val ARG_READONLY = "readonly"
     }
 
     private val viewModel: KeyValueViewModel by viewModels()
+    override val title: String by lazy { getString(R.string.key_values) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
+import ch.pete.appconfigapp.TitleFragment
 import ch.pete.appconfigapp.model.ExternalConfigLocation
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.name
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.url
@@ -19,12 +20,13 @@ import kotlinx.android.synthetic.main.fragment_external_config_location_detail.v
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.view.url
 import timber.log.Timber
 
-class ExternalConfigLocationDetailFragment : Fragment() {
+class ExternalConfigLocationDetailFragment : Fragment(), TitleFragment {
     companion object {
         const val ARG_EXTERNAL_CONFIG_LOCATION_ID = "external_config_location_id"
     }
 
     private val viewModel: ExternalConfigLocationDetailViewModel by viewModels()
+    override val title: String by lazy { getString(R.string.external_config_location_details) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
