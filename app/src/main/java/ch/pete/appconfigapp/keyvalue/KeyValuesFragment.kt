@@ -1,6 +1,7 @@
 package ch.pete.appconfigapp.keyvalue
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
+import kotlinx.android.synthetic.main.fragment_keyvalue.empty
 import kotlinx.android.synthetic.main.fragment_keyvalue.view.addKeyValueButton
+import kotlinx.android.synthetic.main.fragment_keyvalue.view.emptyText
 import kotlinx.android.synthetic.main.fragment_keyvalue.view.keyValues
 
 class KeyValuesFragment : Fragment(), KeyValueView {
@@ -28,6 +31,7 @@ class KeyValuesFragment : Fragment(), KeyValueView {
         viewModel.view = this
         viewModel.mainActivityViewModel =
             ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
+        viewModel.init(arguments?.getLong(ARG_CONFIG_ID))
     }
 
     override fun onCreateView(
@@ -35,31 +39,33 @@ class KeyValuesFragment : Fragment(), KeyValueView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = arguments?.let { args ->
-            val rootView = if (args.containsKey(ARG_CONFIG_ID)) {
-                val rootView = inflater.inflate(R.layout.fragment_keyvalue, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_keyvalue, container, false)
+        if (viewModel.initialised) {
+            viewModel.readonly = arguments?.getBoolean(ARG_READONLY, false) ?: false
 
-                val configId = args.getLong(ARG_CONFIG_ID)
-                viewModel.readonly = args.getBoolean(ARG_READONLY, false)
+            initKeyValuesView(rootView)
 
-                initKeyValuesView(configId, rootView)
-
-                if (viewModel.readonly) {
-                    rootView.addKeyValueButton.visibility = View.GONE
-                } else {
-                    rootView.addKeyValueButton.setOnClickListener {
-                        viewModel.onAddKeyValueClicked(configId)
-                    }
+            if (viewModel.readonly) {
+                rootView.addKeyValueButton.visibility = View.GONE
+            } else {
+                rootView.addKeyValueButton.setOnClickListener {
+                    viewModel.onAddKeyValueClicked()
                 }
-                rootView
-            } else null
-            rootView
-        }
-
-        if (rootView == null) {
-            parentFragmentManager.popBackStack()
+            }
         }
         return rootView
+    }
+
+    override fun close() {
+        parentFragmentManager.popBackStack()
+    }
+
+    override fun showEmptyView() {
+        empty.visibility = View.VISIBLE
+    }
+
+    override fun hideEmptyView() {
+        empty.visibility = View.GONE
     }
 
     override fun showKeyValueDetails(configId: Long, keyValueId: Long?) {
@@ -72,7 +78,7 @@ class KeyValuesFragment : Fragment(), KeyValueView {
         keyValueDialogFragment.show(parentFragmentManager, "keyValueDialogFragment")
     }
 
-    private fun initKeyValuesView(configId: Long, rootView: View) {
+    private fun initKeyValuesView(rootView: View) {
         val adapter =
             if (viewModel.readonly) {
                 KeyValueAdapter(
@@ -89,7 +95,7 @@ class KeyValuesFragment : Fragment(), KeyValueView {
                     }
                 )
             }
-        viewModel.keyValueEntriesByConfigId(configId)
+        viewModel.keyValueEntriesByConfigId()
             .observe(viewLifecycleOwner, Observer {
                 adapter.submitList(it)
             })
@@ -103,5 +109,6 @@ class KeyValuesFragment : Fragment(), KeyValueView {
             addItemDecoration(dividerItemDecoration)
             this.adapter = adapter
         }
+        rootView.emptyText.movementMethod = LinkMovementMethod.getInstance()
     }
 }

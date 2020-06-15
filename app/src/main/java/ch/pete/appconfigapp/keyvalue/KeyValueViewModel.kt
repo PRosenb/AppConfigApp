@@ -1,5 +1,6 @@
 package ch.pete.appconfigapp.keyvalue
 
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.pete.appconfigapp.MainActivityViewModel
@@ -8,8 +9,15 @@ import ch.pete.appconfigapp.model.KeyValue
 import kotlinx.coroutines.launch
 
 class KeyValueViewModel : ViewModel() {
+    companion object {
+        private const val UNSET = -1L
+    }
+
     lateinit var view: KeyValueView
     lateinit var mainActivityViewModel: MainActivityViewModel
+    private var configId: Long = UNSET
+    val initialised
+        get() = configId != UNSET
 
     var readonly = false
 
@@ -17,15 +25,30 @@ class KeyValueViewModel : ViewModel() {
         mainActivityViewModel.appConfigDatabase.appConfigDao()
     }
 
-    fun keyValueEntriesByConfigId(configId: Long) =
+    fun init(configId: Long?) {
+        if (configId != null) {
+            this.configId = configId
+            keyValueEntriesByConfigId().observe(view, Observer {
+                if (it.isEmpty()) {
+                    view.showEmptyView()
+                } else {
+                    view.hideEmptyView()
+                }
+            })
+        } else {
+            view.close()
+        }
+    }
+
+    fun keyValueEntriesByConfigId() =
         appConfigDao.keyValueEntriesByConfigId(configId)
 
-    fun onAddKeyValueClicked(configId: Long) {
+    fun onAddKeyValueClicked() {
         view.showKeyValueDetails(configId, null)
     }
 
     fun onKeyValueEntryClicked(keyValue: KeyValue) {
-        view.showKeyValueDetails(keyValue.configId, keyValue.id)
+        view.showKeyValueDetails(configId, keyValue.id)
     }
 
     fun onKeyValueDeleteClicked(keyValue: KeyValue) {
