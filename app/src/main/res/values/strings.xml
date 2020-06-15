@@ -33,4 +33,8 @@
         \n
         It allows you to reconfigure your app by setting SharedPreferences in it so that you
         can e.g. point it to a staging or dev environment.</string>
+    <string name="external_config_location_empty">Configure one or multiple location
+    to fetch config entries from. It is a yaml file is available on a public URL.\n
+        \n
+    See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
 </resources>

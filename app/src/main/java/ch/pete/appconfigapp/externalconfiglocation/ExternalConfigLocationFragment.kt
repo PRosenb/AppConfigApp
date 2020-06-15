@@ -1,6 +1,7 @@
 package ch.pete.appconfigapp.externalconfiglocation
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
 import ch.pete.appconfigapp.externalconfiglocationdetails.ExternalConfigLocationDetailFragment
+import kotlinx.android.synthetic.main.fragment_external_config_location.empty
 import kotlinx.android.synthetic.main.fragment_external_config_location.view.addExternalConfigLocationButton
+import kotlinx.android.synthetic.main.fragment_external_config_location.view.emptyText
 import kotlinx.android.synthetic.main.fragment_external_config_location.view.recyclerView
 
 class ExternalConfigLocationFragment : Fragment(), ExternalConfigLocationView {
-    companion object {
-        const val ARG_CONFIG_ENTRY_ID = "ARG_CONFIG_ENTRY_ID"
-        const val ARG_NEW = "ARG_NEW"
-    }
-
     private val viewModel: ExternalConfigLocationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +27,7 @@ class ExternalConfigLocationFragment : Fragment(), ExternalConfigLocationView {
         viewModel.view = this
         viewModel.mainActivityViewModel =
             ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
+        viewModel.init()
     }
 
     override fun onCreateView(
@@ -74,6 +73,15 @@ class ExternalConfigLocationFragment : Fragment(), ExternalConfigLocationView {
         rootView.addExternalConfigLocationButton.setOnClickListener {
             viewModel.onAddExternalConfigLocationClicked()
         }
+        rootView.emptyText.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    override fun showEmptyView() {
+        empty.visibility = View.VISIBLE
+    }
+
+    override fun hideEmptyView() {
+        empty.visibility = View.GONE
     }
 
     override fun showExternalConfigLocationDetailFragment(externalConfigLocationId: Long) {

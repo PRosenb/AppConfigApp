@@ -2,6 +2,7 @@ package ch.pete.appconfigapp.externalconfiglocation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.db.AppConfigDao
@@ -16,6 +17,16 @@ class ExternalConfigLocationViewModel(application: Application) : AndroidViewMod
 
     private val appConfigDao: AppConfigDao by lazy {
         mainActivityViewModel.appConfigDatabase.appConfigDao()
+    }
+
+    fun init() {
+        externalConfigLocations().observe(view, Observer {
+            if (it.isEmpty()) {
+                view.showEmptyView()
+            } else {
+                view.hideEmptyView()
+            }
+        })
     }
 
     fun onAddExternalConfigLocationClicked() {
