@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_name_authority.view.explanation
 import kotlinx.android.synthetic.main.fragment_name_authority.view.name
 import timber.log.Timber
 
-class NameAuthorityFragment : Fragment(), TitleFragment {
+class NameAuthorityFragment : Fragment(), TitleFragment, NameAuthorityView {
     companion object {
         const val ARG_CONFIG_ID = "config_id"
     }
@@ -30,8 +30,10 @@ class NameAuthorityFragment : Fragment(), TitleFragment {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.view = this
         viewModel.mainActivityViewModel =
             ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
+        viewModel.init(arguments?.getLong(ARG_CONFIG_ID))
     }
 
     override fun onCreateView(
@@ -39,30 +41,17 @@ class NameAuthorityFragment : Fragment(), TitleFragment {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = arguments?.let { args ->
-            val rootView = if (args.containsKey(ARG_CONFIG_ID)) {
-                val configId = args.getLong(ARG_CONFIG_ID)
-                val rootView = inflater.inflate(R.layout.fragment_name_authority, container, false)
-                rootView.explanation.movementMethod = LinkMovementMethod.getInstance()
-
-                loadData(configId, rootView)
-                rootView
-            } else {
-                null
-            }
-
-            rootView
-        }
-
-        if (rootView == null) {
-            parentFragmentManager.popBackStack()
+        val rootView = inflater.inflate(R.layout.fragment_name_authority, container, false)
+        rootView.explanation.movementMethod = LinkMovementMethod.getInstance()
+        if (viewModel.initialised) {
+            loadData(rootView)
         }
         return rootView
     }
 
-    private fun loadData(configId: Long, rootView: View) {
+    private fun loadData(rootView: View) {
         val liveData =
-            viewModel.configByKeyValueId(configId)
+            viewModel.config()
         liveData.observe(viewLifecycleOwner, object : Observer<Config> {
             override fun onChanged(config: Config) {
                 liveData.removeObserver(this)
@@ -81,5 +70,9 @@ class NameAuthorityFragment : Fragment(), TitleFragment {
                 configId = it
             )
         } ?: Timber.e("Argument '$ARG_CONFIG_ID' missing.")
+    }
+
+    override fun close() {
+        parentFragmentManager.popBackStack()
     }
 }

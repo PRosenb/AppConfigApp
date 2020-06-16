@@ -14,7 +14,8 @@ class KeyValueDialogViewModel : ViewModel() {
     private var configId: Long = MainActivityViewModel.UNSET
     private var keyValueId: Long? = null
     val initialised
-        get() = keyValueId != MainActivityViewModel.UNSET
+        get() = configId != MainActivityViewModel.UNSET
+                && keyValueId != MainActivityViewModel.UNSET
 
     private val appConfigDao: AppConfigDao by lazy {
         mainActivityViewModel.appConfigDatabase.appConfigDao()
