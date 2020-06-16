@@ -7,14 +7,26 @@ import ch.pete.appconfigapp.db.AppConfigDao
 import kotlinx.coroutines.launch
 
 class ExternalConfigLocationDetailViewModel : ViewModel() {
+    lateinit var view: ExternalConfigLocationDetailView
     lateinit var mainActivityViewModel: MainActivityViewModel
+    private var externalConfigLocationId: Long = MainActivityViewModel.UNSET
+    val initialised
+        get() = externalConfigLocationId != MainActivityViewModel.UNSET
 
     private val appConfigDao: AppConfigDao by lazy {
         mainActivityViewModel.appConfigDatabase.appConfigDao()
     }
 
-    fun externalConfigLocationById(keyValueId: Long) =
-        appConfigDao.externalConfigLocationById(keyValueId)
+    fun init(externalConfigLocationId: Long?) {
+        if (externalConfigLocationId != null) {
+            this.externalConfigLocationId = externalConfigLocationId
+        } else {
+            view.close()
+        }
+    }
+
+    fun externalConfigLocation() =
+        appConfigDao.externalConfigLocationById(externalConfigLocationId)
 
     fun storeExternalConfigLocation(name: String, url: String, id: Long) {
         mainActivityViewModel.viewModelScope.launch {

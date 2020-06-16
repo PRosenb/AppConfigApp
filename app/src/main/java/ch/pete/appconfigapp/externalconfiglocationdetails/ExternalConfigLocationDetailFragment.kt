@@ -20,7 +20,8 @@ import kotlinx.android.synthetic.main.fragment_external_config_location_detail.v
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.view.url
 import timber.log.Timber
 
-class ExternalConfigLocationDetailFragment : Fragment(), TitleFragment {
+class ExternalConfigLocationDetailFragment :
+    Fragment(), ExternalConfigLocationDetailView, TitleFragment {
     companion object {
         const val ARG_EXTERNAL_CONFIG_LOCATION_ID = "external_config_location_id"
     }
@@ -32,6 +33,7 @@ class ExternalConfigLocationDetailFragment : Fragment(), TitleFragment {
         super.onCreate(savedInstanceState)
         viewModel.mainActivityViewModel =
             ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
+        viewModel.init(arguments?.getLong(ARG_EXTERNAL_CONFIG_LOCATION_ID))
     }
 
     override fun onCreateView(
@@ -39,35 +41,23 @@ class ExternalConfigLocationDetailFragment : Fragment(), TitleFragment {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = arguments?.let { args ->
-            val rootView = if (args.containsKey(ARG_EXTERNAL_CONFIG_LOCATION_ID)) {
-                val externalConfigLocationId = args.getLong(ARG_EXTERNAL_CONFIG_LOCATION_ID)
-                val rootView =
-                    inflater.inflate(
-                        R.layout.fragment_external_config_location_detail,
-                        container,
-                        false
-                    )
-                rootView.explanation.movementMethod = LinkMovementMethod.getInstance()
+        val rootView =
+            inflater.inflate(
+                R.layout.fragment_external_config_location_detail,
+                container,
+                false
+            )
+        rootView.explanation.movementMethod = LinkMovementMethod.getInstance()
 
-                loadData(externalConfigLocationId, rootView)
-                rootView
-            } else {
-                null
-            }
-
-            rootView
-        }
-
-        if (rootView == null) {
-            parentFragmentManager.popBackStack()
+        if (viewModel.initialised) {
+            loadData(rootView)
         }
         return rootView
     }
 
-    private fun loadData(externalConfigLocationId: Long, rootView: View) {
+    private fun loadData(rootView: View) {
         val liveData =
-            viewModel.externalConfigLocationById(externalConfigLocationId)
+            viewModel.externalConfigLocation()
         liveData.observe(viewLifecycleOwner, object : Observer<ExternalConfigLocation> {
             override fun onChanged(externalConfigLocation: ExternalConfigLocation) {
                 liveData.removeObserver(this)
@@ -86,5 +76,9 @@ class ExternalConfigLocationDetailFragment : Fragment(), TitleFragment {
                 id = it
             )
         } ?: Timber.e("Argument '$ARG_EXTERNAL_CONFIG_LOCATION_ID' missing.")
+    }
+
+    override fun close() {
+        parentFragmentManager.popBackStack()
     }
 }
