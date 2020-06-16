@@ -9,15 +9,11 @@ import ch.pete.appconfigapp.model.KeyValue
 import kotlinx.coroutines.launch
 
 class KeyValueViewModel : ViewModel() {
-    companion object {
-        private const val UNSET = -1L
-    }
-
     lateinit var view: KeyValueView
     lateinit var mainActivityViewModel: MainActivityViewModel
-    private var configId: Long = UNSET
+    private var configId: Long = MainActivityViewModel.UNSET
     val initialised
-        get() = configId != UNSET
+        get() = configId != MainActivityViewModel.UNSET
 
     var readonly = false
 

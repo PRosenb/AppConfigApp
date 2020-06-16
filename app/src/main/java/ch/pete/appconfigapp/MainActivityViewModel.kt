@@ -17,6 +17,9 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
+    companion object {
+        const val UNSET = -1L
+    }
     lateinit var view: MainActivityView
 
     val appConfigDatabase = DatabaseBuilder.builder(application).build()

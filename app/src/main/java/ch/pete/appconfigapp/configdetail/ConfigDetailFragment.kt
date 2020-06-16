@@ -41,6 +41,7 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
         viewModel.view = this
         viewModel.mainActivityViewModel =
             ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
+        viewModel.init(arguments?.getLong(ARG_CONFIG_ENTRY_ID))
     }
 
     override fun onCreateView(
@@ -49,25 +50,19 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_config_detail, container, false)
-
-        arguments?.let {
-            if (it.containsKey(ARG_CONFIG_ENTRY_ID)) {
-                val configId = it.getLong(ARG_CONFIG_ENTRY_ID)
-                initView(rootView, configId)
-                if (it.getBoolean(ARG_NEW)) {
-                    viewModel.onNewItem(configId)
-                    // only show it the first time
-                    it.remove(ARG_NEW)
-                }
-            } else {
-                parentFragmentManager.popBackStack()
+        if (viewModel.initialised) {
+            initView(rootView)
+            if (arguments?.getBoolean(ARG_NEW) == true) {
+                viewModel.onNewItem()
+                // only show it the first time
+                arguments?.remove(ARG_NEW)
             }
-        } ?: parentFragmentManager.popBackStack()
+        }
         return rootView
     }
 
-    private fun initView(rootView: View, configId: Long) {
-        val configLiveDataConfig = viewModel.configById(configId)
+    private fun initView(rootView: View) {
+        val configLiveDataConfig = viewModel.config()
         configLiveDataConfig.observe(viewLifecycleOwner, object : Observer<Config> {
             override fun onChanged(config: Config) {
                 configLiveDataConfig.removeObserver(this)
@@ -78,11 +73,9 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
                     editNameAuthority.visibility = View.GONE
                     editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_view))
                 } else {
-                    config.id?.let { configId ->
-                        editNameAuthority.setOnClickListener {
-                            viewModel.onEditNameAuthorityClicked(configId)
-                        }
-                    } ?: Timber.e("loadedConfig.id is null")
+                    editNameAuthority.setOnClickListener {
+                        viewModel.onEditNameAuthorityClicked()
+                    }
                     editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_edit))
                 }
 
@@ -91,10 +84,10 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
         })
 
         rootView.execute.setOnClickListener {
-            viewModel.onDetailExecuteClicked(configId)
+            viewModel.onDetailExecuteClicked()
         }
 
-        initExecutionResultView(configId, rootView)
+        initExecutionResultView(rootView)
     }
 
     private fun initKeyValues(config: Config) {
@@ -121,7 +114,7 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
         })
     }
 
-    private fun initExecutionResultView(configId: Long, rootView: View) {
+    private fun initExecutionResultView(rootView: View) {
         val executionResultAdapter = ExecutionResultAdapter(
             onItemClickListener = null
         ).apply {
@@ -132,7 +125,7 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
                     }
                 })
         }
-        viewModel.executionResultEntriesByConfigId(configId)
+        viewModel.executionResultEntries()
             .observe(viewLifecycleOwner, Observer {
                 executionResultAdapter.submitList(it)
             })
@@ -146,6 +139,10 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
             addItemDecoration(dividerItemDecoration)
             this.adapter = executionResultAdapter
         }
+    }
+
+    override fun close() {
+        parentFragmentManager.popBackStack()
     }
 
     override fun showNameAuthorityFragment(configId: Long) {

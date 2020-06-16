@@ -13,24 +13,35 @@ import timber.log.Timber
 class ConfigDetailViewModel(application: Application) : AndroidViewModel(application) {
     lateinit var view: ConfigDetailView
     lateinit var mainActivityViewModel: MainActivityViewModel
+    private var configId: Long = MainActivityViewModel.UNSET
+    val initialised
+        get() = configId != MainActivityViewModel.UNSET
 
     private val appConfigDao: AppConfigDao by lazy {
         mainActivityViewModel.appConfigDatabase.appConfigDao()
     }
 
-    fun configById(configId: Long): LiveData<Config> =
+    fun init(configId: Long?) {
+        if (configId != null) {
+            this.configId = configId
+        } else {
+            view.close()
+        }
+    }
+
+    fun config(): LiveData<Config> =
         appConfigDao.fetchConfigById(configId)
 
     fun keyValueEntriesByConfigId(configId: Long) =
         appConfigDao.keyValueEntriesByConfigId(configId)
 
-    fun executionResultEntriesByConfigId(configId: Long) =
+    fun executionResultEntries() =
         appConfigDao.fetchExecutionResultEntriesByConfigId(configId)
 
-    fun onNewItem(configId: Long) =
+    fun onNewItem() =
         view.showNameAuthorityFragment(configId)
 
-    fun onEditNameAuthorityClicked(configId: Long) {
+    fun onEditNameAuthorityClicked() {
         view.showNameAuthorityFragment(configId)
     }
 
@@ -40,7 +51,7 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
         } ?: Timber.e("config.id null")
     }
 
-    fun onDetailExecuteClicked(configId: Long) {
+    fun onDetailExecuteClicked() {
         viewModelScope.launch {
             mainActivityViewModel.callContentProvider(configId)
         }

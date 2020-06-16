@@ -78,6 +78,10 @@ class ExternalConfigLocationFragment : Fragment(), ExternalConfigLocationView, T
         rootView.emptyText.movementMethod = LinkMovementMethod.getInstance()
     }
 
+    override fun close() {
+        parentFragmentManager.popBackStack()
+    }
+
     override fun showEmptyView() {
         empty.visibility = View.VISIBLE
     }
