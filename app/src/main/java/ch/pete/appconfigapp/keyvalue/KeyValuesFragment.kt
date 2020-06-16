@@ -34,7 +34,10 @@ class KeyValuesFragment : Fragment(), KeyValueView, TitleFragment {
         viewModel.view = this
         viewModel.mainActivityViewModel =
             ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
-        viewModel.init(arguments?.getLong(ARG_CONFIG_ID))
+        viewModel.init(
+            arguments?.getLong(ARG_CONFIG_ID),
+            arguments?.getBoolean(ARG_READONLY, false)
+        )
     }
 
     override fun onCreateView(
@@ -44,11 +47,9 @@ class KeyValuesFragment : Fragment(), KeyValueView, TitleFragment {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_keyvalue, container, false)
         if (viewModel.initialised) {
-            viewModel.readonly = arguments?.getBoolean(ARG_READONLY, false) ?: false
-
             initKeyValuesView(rootView)
 
-            if (viewModel.readonly) {
+            if (viewModel.readOnly) {
                 rootView.addKeyValueButton.visibility = View.GONE
             } else {
                 rootView.addKeyValueButton.setOnClickListener {
@@ -83,7 +84,7 @@ class KeyValuesFragment : Fragment(), KeyValueView, TitleFragment {
 
     private fun initKeyValuesView(rootView: View) {
         val adapter =
-            if (viewModel.readonly) {
+            if (viewModel.readOnly) {
                 KeyValueAdapter(
                     onItemClickListener = null,
                     onDeleteClickListener = null

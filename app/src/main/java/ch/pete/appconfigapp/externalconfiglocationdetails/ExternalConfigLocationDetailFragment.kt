@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.fragment_external_config_location_detail.u
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.view.explanation
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.view.name
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.view.url
-import timber.log.Timber
 
 class ExternalConfigLocationDetailFragment :
     Fragment(), ExternalConfigLocationDetailView, TitleFragment {
@@ -70,13 +69,10 @@ class ExternalConfigLocationDetailFragment :
 
     override fun onPause() {
         super.onPause()
-        arguments?.getLong(ARG_EXTERNAL_CONFIG_LOCATION_ID)?.let {
-            viewModel.storeExternalConfigLocation(
-                name = name.text.toString(),
-                url = url.text.toString(),
-                id = it
-            )
-        } ?: Timber.e("Argument '$ARG_EXTERNAL_CONFIG_LOCATION_ID' missing.")
+        viewModel.storeExternalConfigLocation(
+            name = name.text.toString(),
+            url = url.text.toString()
+        )
     }
 
     override fun close() {

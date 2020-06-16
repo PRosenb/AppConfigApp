@@ -28,7 +28,7 @@ class NameAuthorityViewModel : ViewModel() {
     fun config() =
         appConfigDao.fetchConfigById(configId)
 
-    fun storeNameAndAuthority(name: String, authority: String, configId: Long) {
+    fun storeNameAndAuthority(name: String, authority: String) {
         mainActivityViewModel.viewModelScope.launch {
             appConfigDao.updateConfigNameAndAuthority(name, authority, configId)
         }

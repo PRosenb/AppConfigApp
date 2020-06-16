@@ -28,9 +28,9 @@ class ExternalConfigLocationDetailViewModel : ViewModel() {
     fun externalConfigLocation() =
         appConfigDao.externalConfigLocationById(externalConfigLocationId)
 
-    fun storeExternalConfigLocation(name: String, url: String, id: Long) {
+    fun storeExternalConfigLocation(name: String, url: String) {
         mainActivityViewModel.viewModelScope.launch {
-            appConfigDao.updateExternalConfigLocation(name, url, id)
+            appConfigDao.updateExternalConfigLocation(name, url, externalConfigLocationId)
         }
     }
 }

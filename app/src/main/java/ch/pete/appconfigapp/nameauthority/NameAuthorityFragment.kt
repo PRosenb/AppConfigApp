@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.fragment_name_authority.name
 import kotlinx.android.synthetic.main.fragment_name_authority.view.authority
 import kotlinx.android.synthetic.main.fragment_name_authority.view.explanation
 import kotlinx.android.synthetic.main.fragment_name_authority.view.name
-import timber.log.Timber
 
 class NameAuthorityFragment : Fragment(), TitleFragment, NameAuthorityView {
     companion object {
@@ -63,13 +62,10 @@ class NameAuthorityFragment : Fragment(), TitleFragment, NameAuthorityView {
 
     override fun onPause() {
         super.onPause()
-        arguments?.getLong(ARG_CONFIG_ID)?.let {
-            viewModel.storeNameAndAuthority(
-                name = name.text.toString(),
-                authority = authority.text.toString(),
-                configId = it
-            )
-        } ?: Timber.e("Argument '$ARG_CONFIG_ID' missing.")
+        viewModel.storeNameAndAuthority(
+            name = name.text.toString(),
+            authority = authority.text.toString()
+        )
     }
 
     override fun close() {

@@ -45,8 +45,8 @@
     <string name="keyvalue_empty">Configure key/value pairs to be sent to the app under test.\n
         \n
     See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
-    <string name="external_config_location_empty">Configure one or multiple location
-    to fetch config entries from. It is a yaml file is available on a public URL.\n
+    <string name="external_config_location_empty">Configure one or multiple locations
+    to fetch config entries from. It is a yaml file available on a public URL.\n
         \n
     See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
     <string name="external_config_location_detail_explanation">Please specify any name you like and

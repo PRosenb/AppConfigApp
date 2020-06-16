@@ -15,15 +15,17 @@ class KeyValueViewModel : ViewModel() {
     val initialised
         get() = configId != MainActivityViewModel.UNSET
 
-    var readonly = false
+    var readOnly = false
+        private set
 
     private val appConfigDao: AppConfigDao by lazy {
         mainActivityViewModel.appConfigDatabase.appConfigDao()
     }
 
-    fun init(configId: Long?) {
+    fun init(configId: Long?, readOnly: Boolean?) {
         if (configId != null) {
             this.configId = configId
+            this.readOnly = readOnly ?: false
             keyValueEntriesByConfigId().observe(view, Observer {
                 if (it.isEmpty()) {
                     view.showEmptyView()
