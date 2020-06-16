@@ -18,18 +18,28 @@ import kotlinx.android.synthetic.main.dialogfragment_keyvalues.view.ok
 import kotlinx.android.synthetic.main.dialogfragment_keyvalues.view.value
 
 
-class KeyValueDialogFragment : DialogFragment() {
+class KeyValueDialogFragment : DialogFragment(), KeyValueDialogView {
     companion object {
         const val ARG_CONFIG_ID = "config_id"
         const val ARG_KEY_VALUE_ID = "keyValue_id"
+        private const val EMPTY_LONG = 0L
     }
 
     private val viewModel: KeyValueDialogViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.view = this
         viewModel.mainActivityViewModel =
             ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
+        var keyValueId = arguments?.getLong(ARG_KEY_VALUE_ID, EMPTY_LONG)
+        if (keyValueId == EMPTY_LONG) {
+            keyValueId = null
+        }
+        viewModel.init(
+            arguments?.getLong(ARG_CONFIG_ID),
+            keyValueId
+        )
     }
 
     override fun onCreateView(
@@ -37,47 +47,40 @@ class KeyValueDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = arguments?.let { args ->
-            val rootView = if (args.containsKey(ARG_CONFIG_ID)) {
-                val rootView = inflater.inflate(R.layout.dialogfragment_keyvalues, container, false)
-
-                if (args.containsKey(ARG_KEY_VALUE_ID)) {
-                    loadData(args, rootView)
-                }
-
-                rootView.value.addTextChangedListener(
-                    afterTextChanged = { editable ->
-                        if (editable?.isNotBlank() == true) {
-                            rootView.nullCheckbox.isChecked = false
-                        }
-                    }
-                )
-                rootView.nullCheckbox.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        rootView.value.setText("")
+        val rootView = inflater.inflate(R.layout.dialogfragment_keyvalues, container, false)
+        if (viewModel.initialised) {
+            loadData(rootView)
+            rootView.value.addTextChangedListener(
+                afterTextChanged = { editable ->
+                    if (editable?.isNotBlank() == true) {
+                        rootView.nullCheckbox.isChecked = false
                     }
                 }
-
-                rootView.ok.setOnClickListener {
-                    onOkClicked(args.getLong(ARG_CONFIG_ID), rootView)
+            )
+            rootView.nullCheckbox.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    rootView.value.setText("")
                 }
-
-                rootView
-            } else {
-                null
             }
-            rootView
-        }
 
-        if (rootView == null) {
-            parentFragmentManager.popBackStack()
+            rootView.ok.setOnClickListener {
+                viewModel.onOkClicked(
+                    rootView.key.text.toString(),
+                    rootView.value.text.toString(),
+                    rootView.nullCheckbox.isChecked
+                )
+            }
         }
         return rootView
     }
 
-    private fun loadData(args: Bundle, rootView: View) {
+    override fun close() {
+        dialog?.dismiss()
+    }
+
+    private fun loadData(rootView: View) {
         val keyValueLiveData =
-            viewModel.keyValueEntryByKeyValueId(args.getLong(ARG_KEY_VALUE_ID))
+            viewModel.keyValueEntry()
         keyValueLiveData.observe(viewLifecycleOwner, object : Observer<KeyValue> {
             override fun onChanged(keyValue: KeyValue) {
                 keyValueLiveData.removeObserver(this)
@@ -86,24 +89,5 @@ class KeyValueDialogFragment : DialogFragment() {
                 rootView.nullCheckbox.isChecked = keyValue.value == null
             }
         })
-    }
-
-    private fun onOkClicked(configId: Long, rootView: View) {
-        val keyValue = KeyValue(
-            id = if (arguments?.containsKey(ARG_KEY_VALUE_ID) == true) {
-                arguments?.getLong(ARG_KEY_VALUE_ID)
-            } else {
-                null
-            },
-            configId = configId,
-            key = rootView.key.text.toString(),
-            value = if (rootView.nullCheckbox.isChecked) {
-                null
-            } else {
-                rootView.value.text.toString()
-            }
-        )
-        viewModel.storeKeyValue(keyValue)
-        dialog?.dismiss()
     }
 }

@@ -31,6 +31,7 @@ class ExternalConfigLocationDetailFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.view = this
         viewModel.mainActivityViewModel =
             ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
         viewModel.init(arguments?.getLong(ARG_EXTERNAL_CONFIG_LOCATION_ID))
