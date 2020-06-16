@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.R
 import ch.pete.appconfigapp.TitleFragment
+import ch.pete.appconfigapp.keyvaluedetails.KeyValueDialogFragment
 import kotlinx.android.synthetic.main.fragment_keyvalue.empty
 import kotlinx.android.synthetic.main.fragment_keyvalue.view.addKeyValueButton
 import kotlinx.android.synthetic.main.fragment_keyvalue.view.emptyText

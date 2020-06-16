@@ -1,4 +1,4 @@
-package ch.pete.appconfigapp.keyvalue
+package ch.pete.appconfigapp.keyvaluedetails
 
 import android.os.Bundle
 import android.view.LayoutInflater
