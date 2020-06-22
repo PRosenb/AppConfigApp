@@ -156,6 +156,9 @@ interface AppConfigDao {
     @Delete
     suspend fun deleteConfig(config: Config): Int
 
+    @Query("DELETE FROM config WHERE id = :id")
+    suspend fun deleteConfig(id: Long): Int
+
     @Delete
     suspend fun deleteKeyValues(keyValues: List<KeyValue>): Int
 

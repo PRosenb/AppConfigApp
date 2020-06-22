@@ -39,11 +39,10 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
         appConfigDao.fetchExecutionResultEntriesByConfigId(configId)
 
     fun onNewItem() =
-        view.showNameAuthorityFragment(configId)
+        view.showNameAuthorityFragment(configId, true)
 
-    fun onEditNameAuthorityClicked() {
-        view.showNameAuthorityFragment(configId)
-    }
+    fun onEditNameAuthorityClicked() =
+        view.showNameAuthorityFragment(configId, false)
 
     fun onEditKeyValueClicked(config: Config) {
         config.id?.let {

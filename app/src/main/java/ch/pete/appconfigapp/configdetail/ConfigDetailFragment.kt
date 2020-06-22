@@ -64,22 +64,26 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
     private fun initView(rootView: View) {
         val configLiveDataConfig = viewModel.config()
         configLiveDataConfig.observe(viewLifecycleOwner, object : Observer<Config> {
-            override fun onChanged(config: Config) {
-                configLiveDataConfig.removeObserver(this)
-                name.text = config.name
-                authority.text = config.authority
+            override fun onChanged(config: Config?) {
+                if (config != null) {
+                    configLiveDataConfig.removeObserver(this)
+                    name.text = config.name
+                    authority.text = config.authority
 
-                if (config.readonly) {
-                    editNameAuthority.visibility = View.GONE
-                    editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_view))
-                } else {
-                    editNameAuthority.setOnClickListener {
-                        viewModel.onEditNameAuthorityClicked()
+                    if (config.readonly) {
+                        editNameAuthority.visibility = View.GONE
+                        editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_view))
+                    } else {
+                        editNameAuthority.setOnClickListener {
+                            viewModel.onEditNameAuthorityClicked()
+                        }
+                        editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_edit))
                     }
-                    editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_edit))
-                }
 
-                initKeyValues(config)
+                    initKeyValues(config)
+                } else {
+                    close()
+                }
             }
         })
 
@@ -145,12 +149,13 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
         parentFragmentManager.popBackStack()
     }
 
-    override fun showNameAuthorityFragment(configId: Long) {
+    override fun showNameAuthorityFragment(configId: Long, newItem: Boolean) {
         val fragmentTransaction = parentFragmentManager.beginTransaction()
         val fragment = NameAuthorityFragment()
 
         fragment.arguments = Bundle().apply {
             putLong(NameAuthorityFragment.ARG_CONFIG_ID, configId)
+            putBoolean(NameAuthorityFragment.ARG_NEW, newItem)
         }
         fragmentTransaction
             .replace(

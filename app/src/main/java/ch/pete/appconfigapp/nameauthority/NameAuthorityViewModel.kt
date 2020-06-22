@@ -10,6 +10,7 @@ class NameAuthorityViewModel : ViewModel() {
     lateinit var view: NameAuthorityView
     lateinit var mainActivityViewModel: MainActivityViewModel
     private var configId: Long = MainActivityViewModel.UNSET
+    private var newItem = false
     val initialised
         get() = configId != MainActivityViewModel.UNSET
 
@@ -17,7 +18,8 @@ class NameAuthorityViewModel : ViewModel() {
         mainActivityViewModel.appConfigDatabase.appConfigDao()
     }
 
-    fun init(configId: Long?) {
+    fun init(configId: Long?, newItem: Boolean?) {
+        this.newItem = newItem ?: false
         if (configId != null) {
             this.configId = configId
         } else {
@@ -30,7 +32,11 @@ class NameAuthorityViewModel : ViewModel() {
 
     fun storeNameAndAuthority(name: String, authority: String) {
         mainActivityViewModel.viewModelScope.launch {
-            appConfigDao.updateConfigNameAndAuthority(name, authority, configId)
+            if (newItem && name.isBlank() && authority.isBlank()) {
+                appConfigDao.deleteConfig(configId)
+            } else {
+                appConfigDao.updateConfigNameAndAuthority(name, authority, configId)
+            }
         }
     }
 }

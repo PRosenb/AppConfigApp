@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_name_authority.view.name
 class NameAuthorityFragment : Fragment(), TitleFragment, NameAuthorityView {
     companion object {
         const val ARG_CONFIG_ID = "config_id"
+        const val ARG_NEW = "ARG_NEW"
     }
 
     private val viewModel: NameAuthorityViewModel by viewModels()
@@ -32,7 +33,7 @@ class NameAuthorityFragment : Fragment(), TitleFragment, NameAuthorityView {
         viewModel.view = this
         viewModel.mainActivityViewModel =
             ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
-        viewModel.init(arguments?.getLong(ARG_CONFIG_ID))
+        viewModel.init(arguments?.getLong(ARG_CONFIG_ID), arguments?.getBoolean(ARG_NEW))
     }
 
     override fun onCreateView(
