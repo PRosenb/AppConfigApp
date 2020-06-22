@@ -33,7 +33,10 @@
     <string name="key_values">Key/Values</string>
     <string name="external_config_location">External Config</string>
     <string name="external_config_location_details">External Config Details</string>
-    <string name="name_authority_explanation">The name can be any text you like but type the authority
+    <string name="name_authority_explanation">Configure the name and the authority of your configuration
+        entry.\n
+        \n
+        You can use any name but the authority needs to be typed
         exactly as it is defined in the AndroidManifest.xml file of the app under test.\n
         \n
     See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
@@ -43,14 +46,26 @@
         It allows you to reconfigure your app by setting SharedPreferences in it so that you
         can e.g. point it to a staging or dev environment.</string>
     <string name="keyvalue_empty">Configure key/value pairs to be sent to the app under test.\n
+        By default, all key/values you configure will be applied as SharedPreferences in
+        the app under test.
         \n
     See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
-    <string name="external_config_location_empty">Configure one or multiple locations
-    to fetch config entries from. It is a yaml file available on a public URL.\n
+    <string name="external_config_location_empty">External Config allows you to fetch
+        configuration entries from a configuration file located at a public URL.\n
+        \n
+        This file is a YAML file where the configuration entries are configured.\n
+        \n
+        The app syncs them on regular basis so that you can modify them over time.\n
+        \n
+        It allows to easily preconfigure the app for multiple testers. They can then clone the
+        entries and modify them if required.\n
         \n
     See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
-    <string name="external_config_location_detail_explanation">Please specify any name you like and
-        type the URL where the .yaml file of the configuration is located.\n
+    <string name="external_config_location_detail_explanation">Configure the name and the URL of a
+        External Config location.\n
+        \n
+        Please specify a name to identify the entry and type the URL where the .yaml file
+        of the configuration is located.\n
         \n
     See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
 </resources>
