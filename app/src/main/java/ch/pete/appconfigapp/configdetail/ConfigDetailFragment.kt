@@ -51,6 +51,7 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_config_detail, container, false)
         if (viewModel.initialised) {
+            viewModel.onCreateView()
             initView(rootView)
             if (arguments?.getBoolean(ARG_NEW) == true) {
                 viewModel.onNewItem()
@@ -62,42 +63,29 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
     }
 
     private fun initView(rootView: View) {
-        val configLiveDataConfig = viewModel.config()
-        configLiveDataConfig.observe(viewLifecycleOwner, object : Observer<Config> {
-            override fun onChanged(config: Config?) {
-                if (config != null) {
-                    configLiveDataConfig.removeObserver(this)
-                    name.text = config.name
-                    authority.text = config.authority
-
-                    if (config.readonly) {
-                        editNameAuthority.visibility = View.GONE
-                        editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_view))
-                    } else {
-                        editNameAuthority.setOnClickListener {
-                            viewModel.onEditNameAuthorityClicked()
-                        }
-                        editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_edit))
-                    }
-
-                    initKeyValues(config)
-                } else {
-                    close()
-                }
-            }
-        })
-
         rootView.execute.setOnClickListener {
             viewModel.onDetailExecuteClicked()
         }
-
         initExecutionResultView(rootView)
     }
 
-    private fun initKeyValues(config: Config) {
+    override fun initViewWithConfig(config: Config) {
         if (config.id == null) {
             Timber.e("config.id null")
             return
+        }
+
+        name.text = config.name
+        authority.text = config.authority
+
+        if (config.readonly) {
+            editNameAuthority.visibility = View.GONE
+            editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_view))
+        } else {
+            editNameAuthority.setOnClickListener {
+                viewModel.onEditNameAuthorityClicked()
+            }
+            editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_edit))
         }
 
         val configLiveDataKeyValues = viewModel.keyValueEntriesByConfigId(config.id)

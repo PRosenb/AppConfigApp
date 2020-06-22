@@ -3,6 +3,7 @@ package ch.pete.appconfigapp.configdetail
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.db.AppConfigDao
@@ -27,6 +28,20 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
         } else {
             view.close()
         }
+    }
+
+    fun onCreateView() {
+        val configLiveData = config()
+        configLiveData.observe(view, object : Observer<Config> {
+            override fun onChanged(config: Config?) {
+                if (config != null) {
+                    configLiveData.removeObserver(this)
+                    view.initViewWithConfig(config)
+                } else {
+                    view.close()
+                }
+            }
+        })
     }
 
     fun config(): LiveData<Config> =
