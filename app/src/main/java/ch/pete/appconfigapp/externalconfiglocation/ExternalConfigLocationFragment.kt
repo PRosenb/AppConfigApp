@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_external_config_location.empty
 import kotlinx.android.synthetic.main.fragment_external_config_location.view.addExternalConfigLocationButton
 import kotlinx.android.synthetic.main.fragment_external_config_location.view.emptyText
 import kotlinx.android.synthetic.main.fragment_external_config_location.view.recyclerView
+import timber.log.Timber
 
 class ExternalConfigLocationFragment : Fragment(), ExternalConfigLocationView, TitleFragment {
     private val viewModel: ExternalConfigLocationViewModel by viewModels()
@@ -54,8 +55,9 @@ class ExternalConfigLocationFragment : Fragment(), ExternalConfigLocationView, T
             onItemClickListener = {
                 viewModel.onExternalConfigLocationEntryClicked(it)
             },
-            onDeleteClickListener = {
-                viewModel.deleteExternalConfigLocation(it)
+            onDeleteClickListener = { externalConfigLocation ->
+                externalConfigLocation.id?.let { viewModel.deleteExternalConfigLocation(it) }
+                    ?: Timber.e("externalConfigLocation.id is null")
             }
         )
         viewModel.externalConfigLocations()

@@ -52,8 +52,15 @@ class KeyValueDialogViewModel : ViewModel() {
 
     private fun storeKeyValue(keyValue: KeyValue) {
         viewModelScope.launch {
+            val hasValidData =
+                keyValue.key.isNotBlank()
+                        || (keyValue.value != null && keyValue.value.isNotBlank())
             if (keyValue.id == null) {
-                appConfigDao.insertKeyValue(keyValue)
+                if (hasValidData) {
+                    appConfigDao.insertKeyValue(keyValue)
+                }
+            } else if (!hasValidData) {
+                appConfigDao.deleteKeyValue(keyValue)
             } else {
                 appConfigDao.updateKeyValue(keyValue)
             }

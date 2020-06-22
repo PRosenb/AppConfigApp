@@ -30,7 +30,11 @@ class ExternalConfigLocationDetailViewModel : ViewModel() {
 
     fun storeExternalConfigLocation(name: String, url: String) {
         mainActivityViewModel.viewModelScope.launch {
-            appConfigDao.updateExternalConfigLocation(name, url, externalConfigLocationId)
+            if (name.isNotBlank() || url.isNotBlank()) {
+                appConfigDao.updateExternalConfigLocation(name, url, externalConfigLocationId)
+            } else {
+                appConfigDao.deleteExternalConfigLocation(externalConfigLocationId)
+            }
         }
     }
 }

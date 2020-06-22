@@ -47,9 +47,9 @@ class ExternalConfigLocationViewModel(application: Application) : AndroidViewMod
     fun externalConfigLocations() =
         appConfigDao.externalConfigLocations()
 
-    fun deleteExternalConfigLocation(externalConfigLocation: ExternalConfigLocation) {
+    fun deleteExternalConfigLocation(externalConfigLocationId: Long) {
         mainActivityViewModel.viewModelScope.launch {
-            appConfigDao.deleteExternalConfigLocation(externalConfigLocation)
+            appConfigDao.deleteExternalConfigLocation(externalConfigLocationId)
         }
     }
 

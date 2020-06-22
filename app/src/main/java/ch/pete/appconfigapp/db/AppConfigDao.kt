@@ -168,8 +168,8 @@ interface AppConfigDao {
     @Delete
     suspend fun deleteExecutionResults(executionResults: List<ExecutionResult>): Int
 
-    @Delete
-    suspend fun deleteExternalConfigLocation(externalConfigLocation: ExternalConfigLocation)
+    @Query("DELETE FROM external_config_location WHERE id = :id")
+    suspend fun deleteExternalConfigLocation(id: Long)
 
     @Query("DELETE FROM config WHERE id IN (:ids)")
     suspend fun deleteConfigs(ids: List<Long>)
