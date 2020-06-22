@@ -44,10 +44,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:importantForAutofill="no"
-        android:inputType="textUri"
+        android:inputType="textWebEmailAddress"
         android:padding="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleUrl"
+        tools:ignore="TextFields"
         tools:text="URL" />
 
     <TextView
