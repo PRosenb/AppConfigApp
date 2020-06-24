@@ -37,6 +37,37 @@ jobs:
       - store_artifacts:
           path: app/build/outputs/mapping/release/mapping.txt
 
+  publish-google-play:
+    executor: android/android
+    steps:
+      - checkout
+      - run:
+          name: Check, test, build and publish the app to firebase.
+          command: |
+            echo "keyPassword=$RELEASE_KEY_PASSWORD" >> signing.properties
+            # convert to env var
+            # - base64 ./release.keystore > ./release.keystore.base64
+            # - Copy content of ./release.keystore.base64 to env var
+            echo $RELEASE_KEYSTORE_BASE64 | base64 --decode > release.keystore
+            echo $GOOGLE_SERVICES_JSON > app/google-services.json
+            ./gradlew check assembleRelease bundleRelease publish
+            # remove file to not include it as artifact
+            rm app/build/outputs/apk/release/output.json
+      - persist_to_workspace:
+          root: app/build/outputs/
+          paths:
+            - apk/release/*.apk
+            - bundle/release/*
+            - mapping/release/mapping.txt
+      - store_test_results:
+          path: app/build/test-results
+      - store_artifacts:
+          path: app/build/outputs/apk/release
+      - store_artifacts:
+          path: app/build/outputs/bundle/release
+      - store_artifacts:
+          path: app/build/outputs/mapping/release/mapping.txt
+
   publish-github-release:
     docker:
       - image: circleci/golang:1.10
@@ -55,13 +86,16 @@ workflows:
   version: 2
   build-n-publish:
     jobs:
-      - build:
+      - build
+      - publish-google-play:
           filters:
             tags:
               only: /^v.*/
+            branches:
+              ignore: /.*/
       - publish-github-release:
           requires:
-            - build
+            - publish-google-play
           filters:
             tags:
               only: /^v.*/
