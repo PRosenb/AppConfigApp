@@ -12,7 +12,7 @@ class CrashReportingTree : Timber.Tree() {
         private const val CRASHLYTICS_KEY_MESSAGE = "message"
     }
 
-    override fun log(priority: Int, tag: String?, message: String?, throwable: Throwable?) {
+    override fun log(priority: Int, tag: String?, message: String, throwable: Throwable?) {
         if (priority == Log.VERBOSE || priority == Log.DEBUG) {
             return
         }
@@ -23,7 +23,7 @@ class CrashReportingTree : Timber.Tree() {
         val crashlytics = FirebaseCrashlytics.getInstance()
         crashlytics.setCustomKey(CRASHLYTICS_KEY_PRIORITY, priority)
         tag?.let { crashlytics.setCustomKey(CRASHLYTICS_KEY_TAG, it) }
-        message?.let { crashlytics.setCustomKey(CRASHLYTICS_KEY_MESSAGE, it) }
+        crashlytics.setCustomKey(CRASHLYTICS_KEY_MESSAGE, message)
         crashlytics.recordException(t)
     }
 }
