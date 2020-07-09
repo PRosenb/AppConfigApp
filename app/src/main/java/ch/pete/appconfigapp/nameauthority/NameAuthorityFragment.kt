@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.fragment_name_authority.name
 import kotlinx.android.synthetic.main.fragment_name_authority.view.authority
 import kotlinx.android.synthetic.main.fragment_name_authority.view.explanation
 import kotlinx.android.synthetic.main.fragment_name_authority.view.name
+import timber.log.Timber
 
 class NameAuthorityFragment : Fragment(), TitleFragment, NameAuthorityView {
     companion object {
@@ -53,10 +54,16 @@ class NameAuthorityFragment : Fragment(), TitleFragment, NameAuthorityView {
         val liveData =
             viewModel.config()
         liveData.observe(viewLifecycleOwner, object : Observer<Config> {
-            override fun onChanged(config: Config) {
+            override fun onChanged(config: Config?) {
                 liveData.removeObserver(this)
-                rootView.name.setText(config.name)
-                rootView.authority.setText(config.authority)
+
+                if (config != null) {
+                    rootView.name.setText(config.name)
+                    rootView.authority.setText(config.authority)
+                } else {
+                    Timber.w("config is null, close fragment")
+                    close()
+                }
             }
         })
     }

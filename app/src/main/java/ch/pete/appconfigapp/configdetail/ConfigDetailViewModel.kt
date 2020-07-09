@@ -38,6 +38,7 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
                     configLiveData.removeObserver(this)
                     view.initViewWithConfig(config)
                 } else {
+                    Timber.w("config is null, close fragment")
                     view.close()
                 }
             }

@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.fragment_external_config_location_detail.u
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.view.explanation
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.view.name
 import kotlinx.android.synthetic.main.fragment_external_config_location_detail.view.url
+import timber.log.Timber
 
 class ExternalConfigLocationDetailFragment :
     Fragment(), ExternalConfigLocationDetailView, TitleFragment {
@@ -59,10 +60,16 @@ class ExternalConfigLocationDetailFragment :
         val liveData =
             viewModel.externalConfigLocation()
         liveData.observe(viewLifecycleOwner, object : Observer<ExternalConfigLocation> {
-            override fun onChanged(externalConfigLocation: ExternalConfigLocation) {
+            override fun onChanged(externalConfigLocation: ExternalConfigLocation?) {
                 liveData.removeObserver(this)
-                rootView.name.setText(externalConfigLocation.name)
-                rootView.url.setText(externalConfigLocation.url)
+
+                if (externalConfigLocation != null) {
+                    rootView.name.setText(externalConfigLocation.name)
+                    rootView.url.setText(externalConfigLocation.url)
+                } else {
+                    Timber.w("externalConfigLocation is null, close fragment")
+                    close()
+                }
             }
         })
     }

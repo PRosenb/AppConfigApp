@@ -90,14 +90,17 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
 
         val configLiveDataKeyValues = viewModel.keyValueEntriesByConfigId(config.id)
         configLiveDataKeyValues.observe(viewLifecycleOwner, object : Observer<List<KeyValue>> {
-            override fun onChanged(keyValues: List<KeyValue>) {
+            override fun onChanged(keyValues: List<KeyValue>?) {
                 configLiveDataKeyValues.removeObserver(this)
+
                 keyValue.text =
-                    context?.resources?.getQuantityString(
-                        R.plurals.keys_count,
-                        keyValues.size,
-                        keyValues.size
-                    ) ?: ""
+                    if (keyValues != null) {
+                        context?.resources?.getQuantityString(
+                            R.plurals.keys_count,
+                            keyValues.size,
+                            keyValues.size
+                        ) ?: ""
+                    } else ""
 
                 editKeyValue.setOnClickListener {
                     viewModel.onEditKeyValueClicked(config)

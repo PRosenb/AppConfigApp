@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.dialogfragment_keyvalues.view.key
 import kotlinx.android.synthetic.main.dialogfragment_keyvalues.view.nullCheckbox
 import kotlinx.android.synthetic.main.dialogfragment_keyvalues.view.ok
 import kotlinx.android.synthetic.main.dialogfragment_keyvalues.view.value
+import timber.log.Timber
 
 
 class KeyValueDialogFragment : DialogFragment(), KeyValueDialogView {
@@ -82,11 +83,17 @@ class KeyValueDialogFragment : DialogFragment(), KeyValueDialogView {
         val keyValueLiveData =
             viewModel.keyValueEntry()
         keyValueLiveData.observe(viewLifecycleOwner, object : Observer<KeyValue> {
-            override fun onChanged(keyValue: KeyValue) {
+            override fun onChanged(keyValue: KeyValue?) {
                 keyValueLiveData.removeObserver(this)
-                rootView.key.setText(keyValue.key)
-                rootView.value.setText(keyValue.value)
-                rootView.nullCheckbox.isChecked = keyValue.value == null
+
+                if (keyValue != null) {
+                    rootView.key.setText(keyValue.key)
+                    rootView.value.setText(keyValue.value)
+                    rootView.nullCheckbox.isChecked = keyValue.value == null
+                } else {
+                    Timber.w("keyValue is null, close dialog")
+                    close()
+                }
             }
         })
     }
