@@ -61,11 +61,12 @@
         entries and modify them if required.\n
         \n
     See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
-    <string name="external_config_location_detail_explanation">Configure the name and the URL of a
-        External Config location.\n
+    <string name="external_config_location_detail_explanation">Specify a name to identify the entry
+        and type the public URL where the .yaml file of the external configuration is located.\n
         \n
-        Please specify a name to identify the entry and type the URL where the .yaml file
-        of the configuration is located.\n
+        Please note that the public URL must be a https URL for security reasons and the whole URL
+        needs to be specified including https, so e.g.\n
+        https://example.com/config.yaml\n
         \n
-    See <a href="https://github.com/PRosenb/AppConfig">AppConfig Library</a> for details.</string>
+    See <a href="https://github.com/PRosenb/AppConfigApp">App Config App</a> for details.</string>
 </resources>
