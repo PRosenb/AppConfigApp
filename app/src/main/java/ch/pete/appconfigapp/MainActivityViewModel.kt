@@ -55,7 +55,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 callContentProviderAndStoreResult(configEntry)
                 true
             } else {
-                Timber.e("ConfigEntry with id '$configId' not found.")
+                Timber.e("ConfigEntry with id '%s' not found.", configId)
                 false
             }
         }

@@ -71,11 +71,11 @@ class ExternalConfigsSyncer(
             }
             apiConfigEntries.size
         } catch (e: MismatchedInputException) {
-            Timber.e("Could not fetch external config location $externalConfigLocation", e)
+            Timber.e(e, "Could not fetch external config location %s", externalConfigLocation)
             e.printStackTrace()
             0
         } catch (e: HttpException) {
-            Timber.e("Could not fetch external config location $externalConfigLocation", e)
+            Timber.e(e, "Could not fetch external config location %s", externalConfigLocation)
             e.printStackTrace()
             0
         }
