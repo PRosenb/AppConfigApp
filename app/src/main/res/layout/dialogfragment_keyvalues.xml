@@ -18,7 +18,7 @@
     <EditText
         android:id="@+id/key"
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:autofillHints="key"
         android:hint="@string/key"
         android:inputType="textPersonName"
@@ -30,7 +30,7 @@
     <EditText
         android:id="@+id/value"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:autofillHints="value"
         android:hint="@string/value"
         android:inputType="textPersonName"
@@ -42,7 +42,7 @@
     <CheckBox
         android:id="@+id/nullCheckbox"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:checked="true"
         android:padding="8dp"
         android:text="@string/null_checkbox"

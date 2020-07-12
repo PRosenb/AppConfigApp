@@ -19,7 +19,7 @@
     <EditText
         android:id="@+id/name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:autofillHints="name"
         android:inputType="text"
         android:padding="8dp"
@@ -42,7 +42,7 @@
     <EditText
         android:id="@+id/authority"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:importantForAutofill="no"
         android:inputType="text|textEmailAddress"
         android:padding="8dp"
