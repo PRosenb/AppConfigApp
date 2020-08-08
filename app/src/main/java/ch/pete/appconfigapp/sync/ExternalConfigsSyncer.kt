@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import timber.log.Timber
+import java.net.ConnectException
 import java.net.UnknownServiceException
 import java.util.Calendar
 
@@ -83,6 +84,10 @@ class ExternalConfigsSyncer(
             e.printStackTrace()
             0
         } catch (e: UnknownServiceException) {
+            Timber.e(e, "Could not fetch external config location %s", externalConfigLocation)
+            e.printStackTrace()
+            0
+        } catch (e: ConnectException) {
             Timber.e(e, "Could not fetch external config location %s", externalConfigLocation)
             e.printStackTrace()
             0
