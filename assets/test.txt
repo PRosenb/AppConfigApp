@@ -1,0 +1,6 @@
+Money tests
+===========
+https://developer.android.com/studio/test/monkey
+
+- activate Screen Pinning in settings>security>screen pinning
+- adb shell monkey -p ch.pete.appconfigapp -v 10000
