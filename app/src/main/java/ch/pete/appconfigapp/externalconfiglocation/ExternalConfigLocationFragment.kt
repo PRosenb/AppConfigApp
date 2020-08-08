@@ -56,7 +56,7 @@ class ExternalConfigLocationFragment : Fragment(), ExternalConfigLocationView, T
                 viewModel.onExternalConfigLocationEntryClicked(it)
             },
             onDeleteClickListener = { externalConfigLocation ->
-                externalConfigLocation.id?.let { viewModel.deleteExternalConfigLocation(it) }
+                externalConfigLocation.id?.let { viewModel.onDeleteExternalConfigLocation(it) }
                     ?: Timber.e("externalConfigLocation.id is null")
             }
         )

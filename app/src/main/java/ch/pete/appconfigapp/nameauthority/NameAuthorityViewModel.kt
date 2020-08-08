@@ -1,12 +1,16 @@
 package ch.pete.appconfigapp.nameauthority
 
+import android.app.Application
+import android.os.Bundle
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.db.AppConfigDao
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.launch
 
-class NameAuthorityViewModel : ViewModel() {
+class NameAuthorityViewModel(application: Application) : AndroidViewModel(application) {
     lateinit var view: NameAuthorityView
     lateinit var mainActivityViewModel: MainActivityViewModel
     private var configId: Long = MainActivityViewModel.UNSET
@@ -19,6 +23,7 @@ class NameAuthorityViewModel : ViewModel() {
     }
 
     fun init(configId: Long?, newItem: Boolean?) {
+        logEvent("onInitNameAuthority")
         this.newItem = newItem ?: false
         if (configId != null) {
             this.configId = configId
@@ -38,5 +43,15 @@ class NameAuthorityViewModel : ViewModel() {
                 appConfigDao.updateConfigNameAndAuthority(name, authority, configId)
             }
         }
+    }
+
+    private fun logEvent(eventName: String) {
+        val params = Bundle()
+            .apply {
+                putString("ViewModel", "NameAuthorityViewModel")
+                putLong("configId", configId)
+                putBoolean("newItem", newItem)
+            }
+        FirebaseAnalytics.getInstance(getApplication()).logEvent(eventName, params)
     }
 }

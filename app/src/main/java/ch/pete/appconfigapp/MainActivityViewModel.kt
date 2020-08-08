@@ -3,6 +3,7 @@ package ch.pete.appconfigapp
 import android.app.Application
 import android.content.ContentValues
 import android.net.Uri
+import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,7 @@ import ch.pete.appconfigapp.model.ConfigEntry
 import ch.pete.appconfigapp.model.ExecutionResult
 import ch.pete.appconfigapp.model.ResultType
 import ch.pete.appconfigapp.sync.ExternalConfigsSyncer
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,10 +36,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun onMenuExternalConfigLocation() {
+        logEvent("onMenuExternalConfig")
         view.showExternalConfigLocation()
     }
 
     fun onMenuSync() {
+        logEvent("onMenuSync")
         viewModelScope.launch {
             val syncedItemsCount = externalConfigsSyncer.sync()
             if (syncedItemsCount == 0) {
@@ -114,5 +118,13 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             message = message
         )
         appConfigDao.insertExecutionResult(executionResult)
+    }
+
+    private fun logEvent(eventName: String) {
+        val params = Bundle()
+            .apply {
+                putString("ViewModel", "MainActivityViewModel")
+            }
+        FirebaseAnalytics.getInstance(getApplication()).logEvent(eventName, params)
     }
 }

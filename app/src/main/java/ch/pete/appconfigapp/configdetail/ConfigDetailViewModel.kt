@@ -1,6 +1,7 @@
 package ch.pete.appconfigapp.configdetail
 
 import android.app.Application
+import android.os.Bundle
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import ch.pete.appconfigapp.MainActivityViewModel
 import ch.pete.appconfigapp.db.AppConfigDao
 import ch.pete.appconfigapp.model.Config
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -23,6 +25,7 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun init(configId: Long?) {
+        logEvent("onInitConfigDetails")
         if (configId != null) {
             this.configId = configId
         } else {
@@ -54,13 +57,18 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
     fun executionResultEntries() =
         appConfigDao.fetchExecutionResultEntriesByConfigId(configId)
 
-    fun onNewItem() =
+    fun onAddConfig() {
+        logEvent("onAddConfig")
         view.showNameAuthorityFragment(configId, true)
+    }
 
-    fun onEditNameAuthorityClicked() =
+    fun onEditNameAuthorityClicked() {
+        logEvent("onEditNameAuthority")
         view.showNameAuthorityFragment(configId, false)
+    }
 
     fun onEditKeyValueClicked(config: Config) {
+        logEvent("onEditKeyValue")
         config.id?.let {
             view.showKeyValuesFragment(it, config.readonly)
         } ?: Timber.e("config.id null")
@@ -68,7 +76,17 @@ class ConfigDetailViewModel(application: Application) : AndroidViewModel(applica
 
     fun onDetailExecuteClicked() {
         viewModelScope.launch {
+            logEvent("onExecuteOnConfigDetails")
             mainActivityViewModel.callContentProvider(configId)
         }
+    }
+
+    private fun logEvent(eventName: String) {
+        val params = Bundle()
+            .apply {
+                putString("ViewModel", "ConfigDetailViewModel")
+                putLong("configId", configId)
+            }
+        FirebaseAnalytics.getInstance(getApplication()).logEvent(eventName, params)
     }
 }

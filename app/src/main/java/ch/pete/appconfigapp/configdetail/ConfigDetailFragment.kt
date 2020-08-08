@@ -54,7 +54,7 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
             viewModel.onCreateView()
             initView(rootView)
             if (arguments?.getBoolean(ARG_NEW) == true) {
-                viewModel.onNewItem()
+                viewModel.onAddConfig()
                 // only show it the first time
                 arguments?.remove(ARG_NEW)
             }
