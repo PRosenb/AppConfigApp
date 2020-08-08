@@ -18,6 +18,9 @@ class ExternalConfigsSyncer(
     private val appConfigDao: AppConfigDao,
     private val externalConfigLocationService: ExternalConfigLocationService = ExternalConfigLocationService()
 ) {
+    companion object {
+        const val DEFAULT_SORT = 9999L
+    }
 
     suspend fun init() {
         withContext(Dispatchers.IO) {
@@ -121,6 +124,7 @@ class ExternalConfigsSyncer(
             config = Config(
                 name = externalConfig.name,
                 authority = externalConfig.authority,
+                sort = externalConfig.sort ?: DEFAULT_SORT,
                 creationTimestamp = externalConfig.creationTimestamp
                     ?: Calendar.getInstance(),
                 externalConfigId = externalConfig.id,
@@ -138,12 +142,14 @@ class ExternalConfigsSyncer(
             existingConfig.copy(
                 name = externalConfig.name,
                 authority = externalConfig.authority,
+                sort = externalConfig.sort ?: DEFAULT_SORT,
                 creationTimestamp = externalConfig.creationTimestamp
             )
         } else {
             existingConfig.copy(
                 name = externalConfig.name,
-                authority = externalConfig.authority
+                authority = externalConfig.authority,
+                sort = externalConfig.sort ?: DEFAULT_SORT
             )
         }
         if (config.id != null) {

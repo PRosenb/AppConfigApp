@@ -19,7 +19,7 @@ import java.util.Calendar
 @Dao
 interface AppConfigDao {
     @Transaction
-    @Query("SELECT * FROM config")
+    @Query("SELECT * FROM config ORDER BY sort")
     fun fetchConfigEntries(): LiveData<List<ConfigEntry>>
 
     @Transaction

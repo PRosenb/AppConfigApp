@@ -11,6 +11,7 @@ data class ExternalConfig(
     val id: String? = null,
     val name: String,
     val authority: String,
+    val sort: Long?,
     val creationTimestamp: Calendar? = Calendar.getInstance(),
 
     val keyValues: List<ExternalKeyValue> = emptyList()

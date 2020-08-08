@@ -111,24 +111,28 @@ internal class ExternalConfigLocationSyncerTest {
         ExternalConfig(
             id = "externalConfigId0",
             name = "ApiConfigEntry 0.0",
-            authority = "authority0.0"
+            authority = "authority0.0",
+            sort = 1
         ),
         ExternalConfig(
             id = "externalConfigId1",
             name = "ApiConfigEntry 0.1",
-            authority = "authority0.1"
+            authority = "authority0.1",
+            sort = 2
         )
     )
     private val externalConfigs1: MutableList<ExternalConfig> = mutableListOf(
         ExternalConfig(
             id = "externalConfigId2",
             name = "ApiConfigEntry 1.0",
-            authority = "authority1.0"
+            authority = "authority1.0",
+            sort = 3
         ),
         ExternalConfig(
             id = "externalConfigId3",
             name = "ApiConfigEntry 1.1",
-            authority = "authority1.1"
+            authority = "authority1.1",
+            sort = 4
         )
     )
 
@@ -181,6 +185,7 @@ internal class ExternalConfigLocationSyncerTest {
             ExternalConfig(
                 name = "name",
                 authority = "authority",
+                sort = 1,
                 keyValues = listOf(
                     ExternalKeyValue(key = "key0", value = "value0"),
                     ExternalKeyValue(key = "key1", value = "value1")
