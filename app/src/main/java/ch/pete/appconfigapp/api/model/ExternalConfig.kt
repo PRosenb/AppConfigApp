@@ -1,5 +1,6 @@
 package ch.pete.appconfigapp.api.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import java.util.Calendar
 
 data class ExternalKeyValue(
@@ -7,6 +8,7 @@ data class ExternalKeyValue(
     val value: String?
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class ExternalConfig(
     val id: String? = null,
     val name: String,
