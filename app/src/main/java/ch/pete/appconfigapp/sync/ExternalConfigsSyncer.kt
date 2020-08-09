@@ -1,18 +1,17 @@
 package ch.pete.appconfigapp.sync
 
+import android.database.sqlite.SQLiteConstraintException
 import ch.pete.appconfigapp.api.ExternalConfigLocationService
 import ch.pete.appconfigapp.api.model.ExternalConfig
 import ch.pete.appconfigapp.db.AppConfigDao
 import ch.pete.appconfigapp.model.Config
 import ch.pete.appconfigapp.model.ExternalConfigLocation
 import ch.pete.appconfigapp.model.KeyValue
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import timber.log.Timber
-import java.net.ConnectException
-import java.net.UnknownServiceException
+import java.io.IOException
 import java.util.Calendar
 
 class ExternalConfigsSyncer(
@@ -75,24 +74,24 @@ class ExternalConfigsSyncer(
                 }
             }
             apiConfigEntries.size
-        } catch (e: MismatchedInputException) {
-            Timber.e(e, "Could not fetch external config location %s", externalConfigLocation)
-            e.printStackTrace()
-            0
         } catch (e: HttpException) {
-            Timber.e(e, "Could not fetch external config location %s", externalConfigLocation)
+            Timber.e(e, "Could not fetch external config location '%s'", externalConfigLocation)
             e.printStackTrace()
             0
-        } catch (e: UnknownServiceException) {
-            Timber.e(e, "Could not fetch external config location %s", externalConfigLocation)
-            e.printStackTrace()
-            0
-        } catch (e: ConnectException) {
-            Timber.e(e, "Could not fetch external config location %s", externalConfigLocation)
+        } catch (e: IOException) {
+            Timber.e(e, "Could not fetch external config location '%s'", externalConfigLocation)
             e.printStackTrace()
             0
         } catch (e: IllegalArgumentException) {
-            Timber.e(e, "Could not fetch external config location %s", externalConfigLocation)
+            Timber.e(e, "Could not fetch external config location '%s'", externalConfigLocation)
+            e.printStackTrace()
+            0
+        } catch (e: SQLiteConstraintException) {
+            Timber.e(
+                e,
+                "Could not sync external config location '%s' because it was deleted.",
+                externalConfigLocation
+            )
             e.printStackTrace()
             0
         }
