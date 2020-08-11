@@ -1,5 +1,6 @@
 package ch.pete.appconfigapp.sync
 
+import android.database.sqlite.SQLiteConstraintException
 import ch.pete.appconfigapp.api.ExternalConfigLocationService
 import ch.pete.appconfigapp.api.model.ExternalConfig
 import ch.pete.appconfigapp.api.model.ExternalKeyValue
@@ -25,6 +26,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import retrofit2.HttpException
+import timber.log.Timber
+import java.net.ConnectException
 
 @ExtendWith(MockitoExtension::class)
 internal class ExternalConfigLocationSyncerTest {
@@ -205,5 +209,95 @@ internal class ExternalConfigLocationSyncerTest {
                 )
             )
         )
+    }
+
+    @Test
+    fun `server error http 500`() = runBlocking {
+        // given
+        whenever(appConfigDao.externalConfigLocationsSuspend()).thenReturn(externalConfigLocations)
+        whenever(externalConfigService.fetchCentalConfigConfig(any())).thenThrow(HttpException::class.java)
+        var logMessage: String? = null
+        Timber.plant(object : Timber.DebugTree() {
+            override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+                logMessage = message
+            }
+        })
+        // when
+        val result = externalConfigsSyncer.sync()
+        // then
+        assertThat(result).describedAs("amount synced").isEqualTo(0)
+        assertThat(logMessage).describedAs("log message").isNotBlank()
+            .startsWith("Could not fetch external config location")
+        assertThat(logMessage).describedAs("log message with wrong exception").isNotBlank()
+            .endsWith("HttpException\n")
+        Unit
+    }
+
+    @Test
+    fun `parse error`() = runBlocking {
+        // given
+        whenever(appConfigDao.externalConfigLocationsSuspend()).thenReturn(externalConfigLocations)
+        whenever(externalConfigService.fetchCentalConfigConfig(any())).thenThrow(
+            IllegalArgumentException::class.java
+        )
+        var logMessage: String? = null
+        Timber.plant(object : Timber.DebugTree() {
+            override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+                logMessage = message
+            }
+        })
+        // when
+        val result = externalConfigsSyncer.sync()
+        // then
+        assertThat(result).describedAs("amount synced").isEqualTo(0)
+        assertThat(logMessage).describedAs("log message").isNotBlank()
+            .startsWith("Could not fetch external config location")
+        assertThat(logMessage).describedAs("log message with wrong exception").isNotBlank()
+            .endsWith("IllegalArgumentException\n")
+        Unit
+    }
+
+    @Test
+    fun `SQL constrant error`() = runBlocking {
+        // given
+        whenever(appConfigDao.externalConfigLocationsSuspend()).thenReturn(externalConfigLocations)
+        whenever(externalConfigService.fetchCentalConfigConfig(any())).thenThrow(
+            SQLiteConstraintException::class.java
+        )
+        var logMessage: String? = null
+        Timber.plant(object : Timber.DebugTree() {
+            override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+                logMessage = message
+            }
+        })
+        // when
+        val result = externalConfigsSyncer.sync()
+        // then
+        assertThat(result).describedAs("amount synced").isEqualTo(0)
+        assertThat(logMessage).describedAs("error not logged").isNotBlank()
+            .endsWith("SQLiteConstraintException\n")
+        Unit
+    }
+
+    @Test
+    fun `server not available`() = runBlocking {
+        // given
+        whenever(appConfigDao.externalConfigLocationsSuspend()).thenReturn(externalConfigLocations)
+        whenever(externalConfigService.fetchCentalConfigConfig(any())).thenThrow(
+            ConnectException::class.java
+        )
+        var logMessage: String? = null
+        Timber.plant(object : Timber.DebugTree() {
+            override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+                logMessage = message
+            }
+        })
+        // when
+        val result = externalConfigsSyncer.sync()
+        // then
+        assertThat(result).describedAs("amount synced").isEqualTo(0)
+        assertThat(logMessage).describedAs("error not logged").isNotBlank()
+            .endsWith("ConnectException\n")
+        Unit
     }
 }

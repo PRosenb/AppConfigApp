@@ -6,6 +6,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
+import java.io.IOException
 
 
 class ExternalConfigLocationService {
@@ -25,6 +26,7 @@ class ExternalConfigLocationService {
         externalConfigLocationApi = retrofit.create(ExternalConfigLocationApi::class.java)
     }
 
+    @Throws(IOException::class)
     suspend fun fetchCentalConfigConfig(url: String): List<ExternalConfig> =
         externalConfigLocationApi.fetchExternalConfigs(url)
 }
