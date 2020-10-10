@@ -113,7 +113,7 @@ class ConfigEntryAdapter(
         configEntry: ConfigEntry, holder: ConfigEntryViewHolder,
         context: Context
     ) {
-        holder.lastResult.text = configEntry.executionResults.maxBy { it.timestamp }
+        holder.lastResult.text = configEntry.executionResults.maxByOrNull { it.timestamp }
             ?.let {
                 when (it.resultType) {
                     ResultType.SUCCESS -> {

@@ -19,7 +19,7 @@ jobs:
             echo $GOOGLE_SERVICES_JSON > app/google-services.json
             ./gradlew check assembleRelease bundleRelease
             # remove file to not include it as artifact
-            rm app/build/outputs/apk/release/output.json
+            rm app/build/outputs/apk/release/output-metadata.json
       - persist_to_workspace:
           root: app/build/outputs/
           paths:
@@ -52,7 +52,7 @@ jobs:
             echo $GOOGLE_SERVICES_JSON > app/google-services.json
             ./gradlew check assembleRelease bundleRelease publish
             # remove file to not include it as artifact
-            rm app/build/outputs/apk/release/output.json
+            rm app/build/outputs/apk/release/output-metadata.json
       - persist_to_workspace:
           root: app/build/outputs/
           paths:
