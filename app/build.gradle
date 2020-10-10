@@ -20,7 +20,8 @@ if (file("google-services.json").canRead()) {
 apply plugin: 'com.google.firebase.crashlytics'
 
 ext {
-    def repo = Grgit.open()
+    // https://github.com/krzema12/fsynth/issues/53#issuecomment-622530487
+    def repo = Grgit.open(Collections.singletonMap("currentDir", project.rootDir))
     def head = repo.head()
     def tags = repo.tag.list().findAll { it.commit == head }
     if (tags.size() > 1) {
