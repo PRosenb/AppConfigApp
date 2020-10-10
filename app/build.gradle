@@ -55,7 +55,7 @@ android {
     defaultConfig {
         applicationId "ch.pete.appconfigapp"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode calculatedVersionCode
         versionName calculatedVersionName
 
