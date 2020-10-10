@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -80,12 +81,16 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
 
         if (config.readonly) {
             editNameAuthority.visibility = View.GONE
-            editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_view))
+            editKeyValue.setImageDrawable(context?.let {
+                ContextCompat.getDrawable(it, android.R.drawable.ic_menu_view)
+            })
         } else {
             editNameAuthority.setOnClickListener {
                 viewModel.onEditNameAuthorityClicked()
             }
-            editKeyValue.setImageDrawable(context?.getDrawable(android.R.drawable.ic_menu_edit))
+            editKeyValue.setImageDrawable(context?.let {
+                ContextCompat.getDrawable(it, android.R.drawable.ic_menu_edit)
+            })
         }
 
         val configLiveDataKeyValues = viewModel.keyValueEntriesByConfigId(config.id)
@@ -121,7 +126,7 @@ class ConfigDetailFragment : Fragment(), ConfigDetailView, TitleFragment {
                 })
         }
         viewModel.executionResultEntries()
-            .observe(viewLifecycleOwner, Observer {
+            .observe(viewLifecycleOwner, {
                 executionResultAdapter.submitList(it)
             })
         rootView.executionResults.apply {
