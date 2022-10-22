@@ -50,13 +50,13 @@ ext {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    compileSdkVersion 33
+    buildToolsVersion "33.0.0"
 
     defaultConfig {
         applicationId "ch.pete.appconfigapp"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode calculatedVersionCode
         versionName calculatedVersionName
 
@@ -118,6 +118,7 @@ android {
             useJUnitPlatform()
         }
     }
+    namespace 'ch.pete.appconfigapp'
 }
 
 play {
@@ -128,45 +129,45 @@ play {
 }
 
 dependencies {
-    api "com.jakewharton.timber:timber:4.7.1"
-    implementation "androidx.preference:preference-ktx:1.1.1"
+    api "com.jakewharton.timber:timber:5.0.1"
+    implementation "androidx.preference:preference-ktx:1.2.0"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.6.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.1'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
     implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.0"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.room:room-runtime:2.2.5'
-    implementation 'androidx.room:room-ktx:2.2.5'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
-    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.room:room-runtime:2.4.3'
+    implementation 'androidx.room:room-ktx:2.4.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    implementation 'com.github.Android-library-copy-dependencies:SwipeRevealLayout:1.5.2'
 
-    kapt 'androidx.room:room-compiler:2.2.5'
+    kapt 'androidx.room:room-compiler:2.4.3'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
-    testImplementation "org.assertj:assertj-core:3.16.1"
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
+    testImplementation "org.assertj:assertj-core:3.18.1"
     testImplementation 'org.mockito:mockito-inline:3.2.4'
-    testImplementation 'org.mockito:mockito-junit-jupiter:3.3.3'
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.6.28'
     testImplementation "com.nhaarman:mockito-kotlin:1.6.0"
-    testImplementation 'androidx.room:room-testing:2.2.5'
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.8"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    androidTestImplementation 'androidx.test:rules:1.3.0'
+    testImplementation 'androidx.room:room-testing:2.4.3'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
