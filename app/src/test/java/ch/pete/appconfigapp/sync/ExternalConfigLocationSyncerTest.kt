@@ -32,6 +32,7 @@ import java.net.ConnectException
 
 @ExtendWith(MockitoExtension::class)
 internal class ExternalConfigLocationSyncerTest {
+    @Suppress("OPT_IN_USAGE")
     @kotlinx.coroutines.ObsoleteCoroutinesApi
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
@@ -226,9 +227,9 @@ internal class ExternalConfigLocationSyncerTest {
         val result = externalConfigsSyncer.sync()
         // then
         assertThat(result).describedAs("amount synced").isEqualTo(0)
-        assertThat(logMessage).describedAs("log message").isNotBlank()
+        assertThat(logMessage).describedAs("log message").isNotBlank
             .startsWith("Could not fetch external config location")
-        assertThat(logMessage).describedAs("log message with wrong exception").isNotBlank()
+        assertThat(logMessage).describedAs("log message with wrong exception").isNotBlank
             .endsWith("HttpException\n")
         Unit
     }
@@ -250,9 +251,9 @@ internal class ExternalConfigLocationSyncerTest {
         val result = externalConfigsSyncer.sync()
         // then
         assertThat(result).describedAs("amount synced").isEqualTo(0)
-        assertThat(logMessage).describedAs("log message").isNotBlank()
+        assertThat(logMessage).describedAs("log message").isNotBlank
             .startsWith("Could not fetch external config location")
-        assertThat(logMessage).describedAs("log message with wrong exception").isNotBlank()
+        assertThat(logMessage).describedAs("log message with wrong exception").isNotBlank
             .endsWith("IllegalArgumentException\n")
         Unit
     }
@@ -274,7 +275,7 @@ internal class ExternalConfigLocationSyncerTest {
         val result = externalConfigsSyncer.sync()
         // then
         assertThat(result).describedAs("amount synced").isEqualTo(0)
-        assertThat(logMessage).describedAs("error not logged").isNotBlank()
+        assertThat(logMessage).describedAs("error not logged").isNotBlank
             .endsWith("SQLiteConstraintException\n")
         Unit
     }
@@ -296,7 +297,7 @@ internal class ExternalConfigLocationSyncerTest {
         val result = externalConfigsSyncer.sync()
         // then
         assertThat(result).describedAs("amount synced").isEqualTo(0)
-        assertThat(logMessage).describedAs("error not logged").isNotBlank()
+        assertThat(logMessage).describedAs("error not logged").isNotBlank
             .endsWith("ConnectException\n")
         Unit
     }

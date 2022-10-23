@@ -95,6 +95,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 configEntry = configEntry,
                 resultType = ResultType.ACCESS_DENIED
             )
+            Timber.d(e, "Access denied.")
         } catch (e: RuntimeException) {
             addExecutionResult(
                 configEntry = configEntry,

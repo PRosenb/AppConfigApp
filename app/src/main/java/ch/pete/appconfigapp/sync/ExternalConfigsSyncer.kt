@@ -76,15 +76,12 @@ class ExternalConfigsSyncer(
             apiConfigEntries.size
         } catch (e: HttpException) {
             Timber.e(e, "Could not fetch external config location '%s'", externalConfigLocation)
-            e.printStackTrace()
             0
         } catch (e: IOException) {
             Timber.e(e, "Could not fetch external config location '%s'", externalConfigLocation)
-            e.printStackTrace()
             0
         } catch (e: IllegalArgumentException) {
             Timber.e(e, "Could not fetch external config location '%s'", externalConfigLocation)
-            e.printStackTrace()
             0
         } catch (e: SQLiteConstraintException) {
             Timber.e(
@@ -92,7 +89,6 @@ class ExternalConfigsSyncer(
                 "Could not sync external config location '%s' because it was deleted.",
                 externalConfigLocation
             )
-            e.printStackTrace()
             0
         }
     }
