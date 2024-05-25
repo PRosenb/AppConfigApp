@@ -9,8 +9,18 @@ jobs:
       name: android/android-machine
       resource-class: large
       tag: default
+    environment:
+      JVM_OPTS: -Xmx2048m
+      GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
     steps:
       - checkout
+      - run:
+          name: Install OpenJDK 21
+          command: |
+            sudo apt-get update && sudo apt-get install openjdk-21-jdk
+            sudo update-alternatives --set java /usr/lib/jvm/java-21-openjdk-amd64/bin/java
+            sudo update-alternatives --set javac /usr/lib/jvm/java-21-openjdk-amd64/bin/javac
+            java -version
       - run:
           name: Check, test and build the app.
           command: |
@@ -20,6 +30,7 @@ jobs:
             # - Copy content of ./release.keystore.base64 to env var
             echo $RELEASE_KEYSTORE_BASE64 | base64 --decode > release.keystore
             echo $GOOGLE_SERVICES_JSON > app/google-services.json
+            export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
             ./gradlew check assembleRelease bundleRelease
             # remove file to not include it as artifact
             rm app/build/outputs/apk/release/output-metadata.json
@@ -45,8 +56,18 @@ jobs:
       name: android/android-machine
       resource-class: large
       tag: default
+    environment:
+      JVM_OPTS: -Xmx2048m
+      GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
     steps:
       - checkout
+      - run:
+          name: Install OpenJDK 21
+          command: |
+            sudo apt-get update && sudo apt-get install openjdk-21-jdk
+            sudo update-alternatives --set java /usr/lib/jvm/java-21-openjdk-amd64/bin/java
+            sudo update-alternatives --set javac /usr/lib/jvm/java-21-openjdk-amd64/bin/javac
+            java -version
       - run:
           name: Check, test, build and publish the app to firebase.
           command: |
@@ -56,6 +77,7 @@ jobs:
             # - Copy content of ./release.keystore.base64 to env var
             echo $RELEASE_KEYSTORE_BASE64 | base64 --decode > release.keystore
             echo $GOOGLE_SERVICES_JSON > app/google-services.json
+            export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
             ./gradlew check assembleRelease bundleRelease publish
             # remove file to not include it as artifact
             rm app/build/outputs/apk/release/output-metadata.json
