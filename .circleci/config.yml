@@ -1,11 +1,14 @@
 version: 2.1
 
 orbs:
-  android: circleci/android@0.2.0
+  android: circleci/android@2.5.0
 
 jobs:
   build:
-    executor: android/android
+    executor:
+      name: android/android-machine
+      resource-class: large
+      tag: default
     steps:
       - checkout
       - run:
@@ -38,7 +41,10 @@ jobs:
           path: app/build/outputs/mapping/release/mapping.txt
 
   publish-google-play:
-    executor: android/android
+    executor:
+      name: android/android-machine
+      resource-class: large
+      tag: default
     steps:
       - checkout
       - run:
