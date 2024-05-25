@@ -105,10 +105,6 @@ android {
         abortOnError true
         ignore "ContentDescription", "Overdraw"
     }
-    compileOptions {
-        sourceCompatibility = '21'
-        targetCompatibility = '21'
-    }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
