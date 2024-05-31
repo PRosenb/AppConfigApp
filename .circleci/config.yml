@@ -30,7 +30,7 @@ jobs:
             echo $RELEASE_KEYSTORE_BASE64 | base64 --decode > release.keystore
             echo $GOOGLE_SERVICES_JSON > app/google-services.json
             export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-            ./gradlew check assembleRelease bundleRelease
+            ./gradlew updateManifestQueries check assembleRelease bundleRelease
             # remove file to not include it as artifact
             rm app/build/outputs/apk/release/output-metadata.json
       - persist_to_workspace:
@@ -76,7 +76,7 @@ jobs:
             echo $RELEASE_KEYSTORE_BASE64 | base64 --decode > release.keystore
             echo $GOOGLE_SERVICES_JSON > app/google-services.json
             export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-            ./gradlew check assembleRelease bundleRelease publish
+            ./gradlew updateManifestQueries check assembleRelease bundleRelease publish
             # remove file to not include it as artifact
             rm app/build/outputs/apk/release/output-metadata.json
       - persist_to_workspace:

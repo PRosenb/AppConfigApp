@@ -173,13 +173,16 @@ tasks.register('updateManifestQueries') {
     doLast {
         // read from Gist
         final String appConfigAppQueryAuthoritiesUrl = "https://gist.githubusercontent.com/PRosenb/2e8ad7f073999a352e467a15f6d0b93f/raw/AppConfigAppQueryAuthorities.txt"
-        ant.get(src: appConfigAppQueryAuthoritiesUrl, dest: new File('build/queries.txt'))
+        final File buildDir = layout.buildDirectory.get().asFile
+        buildDir.mkdir()
+        ant.get(src: appConfigAppQueryAuthoritiesUrl, dest: new File(buildDir, 'queries.txt'))
 
-        final List<String> queriesList = new File("app/build/queries.txt").text.readLines()
+        final List<String> queriesList = new File(buildDir, "queries.txt").text.readLines()
         String queries = "<queries>\n"
         for (def query : queriesList) {
             queries += "        <provider android:authorities=\"" + query + "\"/>\n"
         }
+        queries += "    "
         ant.replaceregexp(match: '<queries>', replace: queries, flags: 'g', byline: true) {
             fileset(dir: 'src/main', includes: 'AndroidManifest.xml')
         }
