@@ -8,6 +8,8 @@
         android:name="com.google.android.gms.permission.AD_ID"
         tools:node="remove" />
 
+    <queries></queries>
+
     <application
         android:name=".app.App"
         android:allowBackup="true"
